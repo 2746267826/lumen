@@ -70,7 +70,7 @@ jobs:
             echo "::error::Converter is not a dependency property; use StaticResource."
             exit 1
           fi
-          if grep -rn "={StaticResource [A-Za-z]*\(Brush\|Gradient\|Shadow\|Glow\)}" src/Lumen.Windows --include=*.xaml; then
+          if grep -rn '="{StaticResource [A-Za-z]*\(Brush\|Gradient\|Shadow\|Glow\)}"' src/Lumen.Windows --include=*.xaml; then
             echo "::error::Theme brushes must use DynamicResource so switching repaints the UI."
             exit 1
           fi
