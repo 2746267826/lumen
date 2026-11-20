@@ -62,6 +62,18 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: 8.0.x
+      - name: Lint theme resource usage
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -rn "Converter={DynamicResource" src/Lumen.Windows --include=*.xaml; then
+            echo "::error::Converter is not a dependency property; use StaticResource."
+            exit 1
+          fi
+          if grep -rn "={StaticResource [A-Za-z]*\(Brush\|Gradient\|Shadow\|Glow\)}" src/Lumen.Windows --include=*.xaml; then
+            echo "::error::Theme brushes must use DynamicResource so switching repaints the UI."
+            exit 1
+          fi
       - name: Build
         run: dotnet build src/Lumen.Windows/Lumen.Windows.csproj -c Release
       - name: Verify both publish modes
@@ -77,6 +89,18 @@ jobs:
           if (Get-ChildItem dist -Recurse -Filter *.pdb) { throw "PDB files must not be published" }
           if (-not (Test-Path dist/self-contained/Lumen.Windows.exe)) { throw "Missing self-contained exe" }
           if (-not (Test-Path dist/framework-dependent/Lumen.Windows.exe)) { throw "Missing framework-dependent exe" }
+      - name: Launch smoke test (dark theme)
+        shell: pwsh
+        run: ./scripts/smoke-windows.ps1 -Exe dist/framework-dependent/Lumen.Windows.exe -Theme dark -MaxBrightness 90 -Shot artifacts/theme-dark.png
+      - name: Launch smoke test (light theme)
+        shell: pwsh
+        run: ./scripts/smoke-windows.ps1 -Exe dist/framework-dependent/Lumen.Windows.exe -Theme light -MinBrightness 150 -Shot artifacts/theme-light.png
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: windows-theme-shots
+          path: artifacts/*.png
+          if-no-files-found: ignore
 
   android:
     name: Android debug build

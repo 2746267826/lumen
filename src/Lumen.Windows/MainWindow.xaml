@@ -234,13 +234,13 @@
                 </Grid>
                 <Border Style="{StaticResource Divider}" Margin="0,11,0,10" />
                 <StackPanel Orientation="Horizontal">
-                  <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={DynamicResource StringToBrush}}"
+                  <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}"
                            Margin="0,0,7,0" />
                   <TextBlock Text="{Binding ServerStatus}" FontSize="10.5"
                              Foreground="{DynamicResource MutedBrush}" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                  <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={DynamicResource StringToBrush}}"
+                  <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={StaticResource StringToBrush}}"
                            Margin="0,0,7,0" />
                   <TextBlock Text="{Binding LanStatus}" FontSize="10.5"
                              Foreground="{DynamicResource MutedBrush}" TextTrimming="CharacterEllipsis" />
@@ -271,14 +271,14 @@
           <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
             <Border Style="{StaticResource StatusPill}" Margin="0,0,8,0">
               <StackPanel Orientation="Horizontal">
-                <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={DynamicResource StringToBrush}}"
+                <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={StaticResource StringToBrush}}"
                          Margin="0,0,7,0" />
                 <TextBlock Text="{Binding LanStatus}" FontSize="10.5" Foreground="{DynamicResource MutedBrush}" />
               </StackPanel>
             </Border>
             <Border Style="{StaticResource StatusPill}" Margin="0,0,8,0">
               <StackPanel Orientation="Horizontal">
-                <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={DynamicResource StringToBrush}}"
+                <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}"
                          Margin="0,0,7,0" />
                 <TextBlock Text="{Binding ServerStatus}" FontSize="10.5" Foreground="{DynamicResource MutedBrush}" />
               </StackPanel>
@@ -453,7 +453,7 @@
                                      FontSize="18" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Right" />
                           <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                             <Ellipse Width="6" Height="6" Margin="0,0,5,0"
-                                     Fill="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
+                                     Fill="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
                             <TextBlock Text="{Binding StatusLabel}" FontSize="9"
                                        Foreground="{DynamicResource MutedBrush}" />
                           </StackPanel>
@@ -624,9 +624,9 @@
                           <Border Style="{StaticResource StatusPill}" HorizontalAlignment="Left" Background="{DynamicResource StatusPillBrush}">
                             <StackPanel Orientation="Horizontal">
                               <Ellipse Width="5" Height="5" Margin="0,0,6,0"
-                                       Fill="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
+                                       Fill="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
                               <TextBlock Text="{Binding StatusLabel}" FontSize="9.5"
-                                         Foreground="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
+                                         Foreground="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
                             </StackPanel>
                           </Border>
                           <TextBlock Text="{Binding ProgressText}" FontSize="10" Foreground="{DynamicResource DimBrush}"
@@ -752,7 +752,7 @@
                       </StackPanel>
                       <StackPanel Grid.Column="3" VerticalAlignment="Center">
                         <TextBlock Text="{Binding StatusLabel}" FontSize="10.5" FontWeight="SemiBold"
-                                   Foreground="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
+                                   Foreground="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
                         <TextBlock Text="{Binding ExpiryLabel}" Style="{StaticResource CaptionText}" Margin="0,5,0,0" />
                       </StackPanel>
                       <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
@@ -818,7 +818,7 @@
                     <Border Grid.Column="1" Style="{StaticResource StatusPill}" VerticalAlignment="Top">
                       <StackPanel Orientation="Horizontal">
                         <Ellipse Width="5" Height="5" Margin="0,0,6,0"
-                                 Fill="{Binding ServerStatusColor, Converter={DynamicResource StringToBrush}}" />
+                                 Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}" />
                         <TextBlock Text="{Binding ServerStatus}" FontSize="9.5"
                                    Foreground="{DynamicResource MutedBrush}" />
                       </StackPanel>
@@ -1293,9 +1293,9 @@
                 <Border Grid.Column="2" Style="{StaticResource StatusPill}" VerticalAlignment="Top">
                   <StackPanel Orientation="Horizontal">
                     <Ellipse Width="5" Height="5" Margin="0,0,6,0"
-                             Fill="{Binding SelectedTransfer.StatusColor, Converter={DynamicResource StringToBrush}}" />
+                             Fill="{Binding SelectedTransfer.StatusColor, Converter={StaticResource StringToBrush}}" />
                     <TextBlock Text="{Binding SelectedTransfer.StatusLabel}" FontSize="9.5"
-                               Foreground="{Binding SelectedTransfer.StatusColor, Converter={DynamicResource StringToBrush}}" />
+                               Foreground="{Binding SelectedTransfer.StatusColor, Converter={StaticResource StringToBrush}}" />
                   </StackPanel>
                 </Border>
               </Grid>
@@ -1472,9 +1472,9 @@
             Visibility="{Binding ToastVisible, Converter={StaticResource BoolToVis}}">
       <StackPanel Orientation="Horizontal">
         <Ellipse Width="6" Height="6" Margin="0,0,9,0"
-                 Fill="{Binding ToastColor, Converter={DynamicResource StringToBrush}}" />
+                 Fill="{Binding ToastColor, Converter={StaticResource StringToBrush}}" />
         <TextBlock Text="{Binding ToastMessage}" FontSize="11.5" MaxWidth="560" TextWrapping="Wrap"
-                   Foreground="{Binding ToastColor, Converter={DynamicResource StringToBrush}}" />
+                   Foreground="{Binding ToastColor, Converter={StaticResource StringToBrush}}" />
       </StackPanel>
     </Border>
   </Grid>
