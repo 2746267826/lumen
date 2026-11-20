@@ -2,10 +2,10 @@
 **/obj
 **/build
 **/.gradle
-data
-publish
-artifacts
+/data
+/publish
+/artifacts
 .git
 .idea
 .vs
-android
+/android
