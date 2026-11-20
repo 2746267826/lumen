@@ -14,7 +14,7 @@ Lumen 是一个面向 Windows 与 Android 的局域网优先设备互传工具�
 - Docker 镜像：`ghcr.io/2746267826/lumen:latest`
 - 在线构建状态：<https://github.com/2746267826/lumen/actions>
 
-Release 资产包含 Windows x64 自包含压缩包、Android Debug APK、可选的签名 APK 和 `SHA256SUMS.txt`。
+Release 资产包含 Windows x64 自包含压缩包、固定证书签名的 Android APK、签名证书信息和 `SHA256SUMS.txt`。
 
 ## 功能
 
@@ -235,7 +235,7 @@ docker-compose.yml    服务端部署
 | --- | --- | --- |
 | `CI` | Push 到 `main`、Pull Request、手动触发 | 服务端构建与健康检查、Windows WPF 编译、Android Debug APK、Docker 镜像启动检查 |
 | `Docker image` | Push 到 `main` 或 `v*` 标签 | `ghcr.io/2746267826/lumen` 多架构镜像，标签包含 `latest`、分支名、`sha-*`、语义化版本 |
-| `Release` | 推送 `v*` 标签 | Windows 压缩包、Android APK、校验和、GitHub Release |
+| `Release` | 推送 `v*` 标签 | Windows 压缩包、固定证书签名的 Android APK、签名证书信息、校验和、GitHub Release |
 
 ### 发布新版本
 
@@ -246,9 +246,21 @@ git push origin v1.0.0
 
 `v1.0.0` 会同时触发客户端 Release 和 Docker 版本镜像。Windows 程序集版本、Android `versionName` 自动取自标签，Android `versionCode` 使用 Actions 运行编号。
 
-### Android 签名 Secrets
+### Android 签名
 
-未配置签名时，Release 会附上可直接安装的 Debug APK，以及明确标记为 `unsigned` 的 Release APK。配置以下 Secrets 后，会自动生成已签名的正式 APK：
+本仓库已配置固定的 Release 签名密钥。`v1.0.1` 及之后的正式 APK 都使用同一张证书，因此可以直接覆盖升级安装。
+
+正式签名证书 SHA-256：
+
+```text
+61:3F:4B:4C:C9:86:A7:79:7D:13:EA:60:48:8A:4A:2E:5B:36:0F:C2:6F:ED:08:B2:EC:99:AD:B4:CF:14:7F:CC
+```
+
+每次 Release 都会附带 `ANDROID-CERTIFICATE.txt`，可用 `apksigner verify --print-certs` 核对。
+
+> 重要：不要删除或替换仓库中的签名 Secrets。更换证书后，已安装用户将无法覆盖升级，只能卸载重装。
+
+签名由以下 GitHub Actions Secrets 提供：
 
 | Secret | 说明 |
 | --- | --- |
@@ -258,6 +270,8 @@ git push origin v1.0.0
 | `ANDROID_KEY_PASSWORD` | 密钥密码 |
 
 本地签名仍可使用 `src/Lumen.Android/keystore.properties`，格式见 `keystore.properties.example`。
+
+如果 Secrets 缺失（例如 Fork 仓库），Release 会自动回退为 Debug APK + 明确标记的 `unsigned` APK。`v1.0.0` 的 Debug APK 使用 Android 临时 Debug 证书，无法升级到正式签名包；从 `v1.0.1` 起安装正式签名包即可持续覆盖升级。
 
 Dependabot 每周检查 GitHub Actions、Gradle、NuGet 和 Docker 基础镜像更新。
 
@@ -270,6 +284,7 @@ Dependabot 每周检查 GitHub Actions、Gradle、NuGet 和 Docker 基础镜像�
 - Android 增强：设备卡片显示“服务器中转已连接”与 IPv4/IPv6 地址；系统分享文字入口弹出设备选择；前台服务通知与后台存活验证通过。
 - Windows：`dotnet build` 与服务端互操作逻辑通过编译；当前验收环境为 Linux，WPF 界面运行需在 Windows 上做最终视觉验收。
 - GitHub Actions：`CI` 的服务端、Windows、Android、Docker 四个 job 全部通过；`v1.0.0` Release 已产出 Windows 压缩包、Android Debug/unsigned APK 与 `SHA256SUMS.txt`。
+- Android 签名：本地 `assembleRelease` 已用固定证书签名，`apksigner` 指纹与 keystore 一致；`versionCode` 高于 `v1.0.0`，可覆盖升级。
 - GHCR：`1.0.0`、`1.0`、`latest`、`sha-*` 标签均已推送，manifest 同时包含 `linux/amd64` 与 `linux/arm64`。
 
 ## 已知限制
