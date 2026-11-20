@@ -269,6 +269,8 @@ Dependabot 每周检查 GitHub Actions、Gradle、NuGet 和 Docker 基础镜像�
 - Android：真实模拟器启动、登录与设备绑定；局域网文字与 3 分块文件接收（SHA-256 一致）；服务器中转文字发送；服务器中转 3 分块文件接收（SHA-256 一致）；文字/文件分享创建、密码下载验证。
 - Android 增强：设备卡片显示“服务器中转已连接”与 IPv4/IPv6 地址；系统分享文字入口弹出设备选择；前台服务通知与后台存活验证通过。
 - Windows：`dotnet build` 与服务端互操作逻辑通过编译；当前验收环境为 Linux，WPF 界面运行需在 Windows 上做最终视觉验收。
+- GitHub Actions：`CI` 的服务端、Windows、Android、Docker 四个 job 全部通过；`v1.0.0` Release 已产出 Windows 压缩包、Android Debug/unsigned APK 与 `SHA256SUMS.txt`。
+- GHCR：`1.0.0`、`1.0`、`latest`、`sha-*` 标签均已推送，manifest 同时包含 `linux/amd64` 与 `linux/arm64`。
 
 ## 已知限制
 
