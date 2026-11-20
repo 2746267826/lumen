@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Lumen.Windows.ViewModels;
@@ -6,9 +7,27 @@ namespace Lumen.Windows;
 
 public partial class MainWindow : Window
 {
+    private bool _allowClose;
+
     public MainWindow()
     {
         InitializeComponent();
+    }
+
+    public event EventHandler? HideToTrayRequested;
+
+    public void AllowClose() => _allowClose = true;
+
+    protected override void OnClosing(CancelEventArgs e)
+    {
+        if (!_allowClose)
+        {
+            e.Cancel = true;
+            HideToTrayRequested?.Invoke(this, EventArgs.Empty);
+            return;
+        }
+
+        base.OnClosing(e);
     }
 
     private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

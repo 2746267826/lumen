@@ -206,6 +206,18 @@ public sealed class TransferCoordinator : IAsyncDisposable
         var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, _disposeCts.Token);
         var transferIdHint = Guid.NewGuid();
         _transferCancellations[transferIdHint] = linkedCts;
+        var boundIds = new List<Guid>();
+        void BindRecord(Guid id)
+        {
+            if (boundIds.Contains(id))
+            {
+                return;
+            }
+
+            boundIds.Add(id);
+            _transferCancellations[id] = linkedCts;
+        }
+
         try
         {
             var route = await ChooseRouteAsync(peer, kind, name, size, linkedCts.Token);
@@ -229,6 +241,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
                         sha,
                         text,
                         path,
+                        BindRecord,
                         linkedCts.Token);
                     return;
                 }
@@ -256,6 +269,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
                     sha,
                     text,
                     path,
+                    BindRecord,
                     linkedCts.Token);
                 return;
             }
@@ -273,6 +287,11 @@ public sealed class TransferCoordinator : IAsyncDisposable
         }
         finally
         {
+            foreach (var id in boundIds)
+            {
+                _transferCancellations.TryRemove(id, out _);
+            }
+
             _transferCancellations.TryRemove(transferIdHint, out _);
             linkedCts.Dispose();
             Interlocked.Decrement(ref _activeSends);
@@ -315,6 +334,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
         string? sha,
         string? text,
         string? path,
+        Action<Guid> bindRecord,
         CancellationToken ct)
     {
         var chunkSize = kind == TransferKinds.Text
@@ -390,6 +410,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
             IpFamily = endpoint.Family
         });
         RegisterRecord(record);
+        bindRecord(record.Id);
         _directSessions[record.Id] = new DirectSession(endpoint, response.UploadToken);
 
         bool accepted;
@@ -599,6 +620,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
         string? sha,
         string? text,
         string? path,
+        Action<Guid> bindRecord,
         CancellationToken ct)
     {
         var chunkSize = kind == TransferKinds.Text
@@ -657,6 +679,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
             IpFamily = NetworkUtilities.FamilyOf(dto.SenderAddress)
         });
         RegisterRecord(record);
+        bindRecord(record.Id);
 
         var accepted = await WaitRelayAcceptedAsync(record, ct);
         if (!accepted)

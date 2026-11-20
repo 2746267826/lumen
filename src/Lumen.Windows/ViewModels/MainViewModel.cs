@@ -151,15 +151,15 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         ChooseReceiveFolderCommand = new RelayCommand(_ => ChooseReceiveFolder());
         SendFilesCommand = Async(
             parameter => SendFilesAsync(parameter as PeerDevice),
-            parameter => parameter is PeerDevice { CanSend: true } && !IsSending);
+            parameter => parameter is PeerDevice { CanSend: true });
         SendImageCommand = Async(
             parameter => SendImagesAsync(parameter as PeerDevice),
-            parameter => parameter is PeerDevice { CanSend: true } && !IsSending);
+            parameter => parameter is PeerDevice { CanSend: true });
         SendTextCommand = new RelayCommand(OpenCompose);
         SendClipboardCommand = Async(
             parameter => SendClipboardAsync(parameter as PeerDevice),
-            parameter => parameter is PeerDevice { CanSend: true } && !IsSending);
-        ConfirmComposeCommand = Async(SendComposeAsync, () => !string.IsNullOrWhiteSpace(ComposeText));
+            parameter => parameter is PeerDevice { CanSend: true });
+        ConfirmComposeCommand = Async(SendComposeAsync);
         CloseComposeCommand = new RelayCommand(_ => IsComposeOpen = false);
         PasteClipboardCommand = new RelayCommand(_ => PasteClipboard());
         OpenTransferCommand = new RelayCommand(parameter =>
@@ -536,10 +536,12 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             if (SetProperty(ref _composeText, value))
             {
                 OnPropertyChanged(nameof(ComposeLengthLabel));
-                CommandManager.InvalidateRequerySuggested();
+                OnPropertyChanged(nameof(CanSendCompose));
             }
         }
     }
+
+    public bool CanSendCompose => !string.IsNullOrWhiteSpace(ComposeText);
 
     public string ComposeLengthLabel => $"{ComposeText.Length} / 1,000,000";
 
@@ -996,7 +998,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Multiselect = true,
             Filter = "所有文件|*.*"
         };
-        if (dialog.ShowDialog() != true)
+        if (dialog.ShowDialog(Application.Current.MainWindow) != true)
         {
             return;
         }
@@ -1018,7 +1020,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Multiselect = true,
             Filter = "图片|*.png;*.jpg;*.jpeg;*.gif;*.webp;*.avif;*.bmp"
         };
-        if (dialog.ShowDialog() != true)
+        if (dialog.ShowDialog(Application.Current.MainWindow) != true)
         {
             return;
         }
@@ -1234,7 +1236,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             Title = "选择要分享的文件",
             Filter = "所有文件|*.*|图片|*.png;*.jpg;*.jpeg;*.gif;*.webp;*.pdf"
         };
-        if (dialog.ShowDialog() == true)
+        if (dialog.ShowDialog(Application.Current.MainWindow) == true)
         {
             OpenShareDialog(
                 Path.GetFileName(dialog.FileName),
@@ -1440,7 +1442,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
                     : Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Multiselect = false
             };
-            if (dialog.ShowDialog() == true)
+            if (dialog.ShowDialog(Application.Current.MainWindow) == true)
             {
                 ReceiveDirectory = dialog.FolderName;
             }

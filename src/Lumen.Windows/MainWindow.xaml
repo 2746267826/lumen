@@ -124,7 +124,7 @@
           <Path Data="M2,2 H12 V12 H2 Z" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                 StrokeThickness="1.1" Fill="Transparent" />
         </Button>
-        <Button Style="{StaticResource WindowButtonClose}" ToolTip="关闭" Click="CloseButton_Click">
+        <Button Style="{StaticResource WindowButtonClose}" ToolTip="关闭到托盘，继续接收文件" Click="CloseButton_Click">
           <Path Data="M2,2 L12,12 M12,2 L2,12" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                 StrokeThickness="1.1" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />
         </Button>
@@ -1142,7 +1142,8 @@
             <Button Style="{StaticResource SecondaryButton}" Content="取消" Height="40" Margin="0,0,6,0"
                     Command="{Binding CloseComposeCommand}" />
             <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="发送" Height="40"
-                    Margin="6,0,0,0" Command="{Binding ConfirmComposeCommand}" />
+                    Margin="6,0,0,0" Command="{Binding ConfirmComposeCommand}"
+                    IsEnabled="{Binding CanSendCompose}" />
           </Grid>
         </StackPanel>
       </Border>

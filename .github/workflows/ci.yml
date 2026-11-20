@@ -76,6 +76,8 @@ jobs:
           fi
       - name: Build
         run: dotnet build src/Lumen.Windows/Lumen.Windows.csproj -c Release
+      - name: Unit tests
+        run: dotnet test tests/Lumen.Windows.Tests/Lumen.Windows.Tests.csproj -c Release
       - name: Verify both publish modes
         shell: pwsh
         run: |
