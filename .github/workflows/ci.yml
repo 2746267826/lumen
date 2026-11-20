@@ -95,6 +95,9 @@ jobs:
       - name: Launch smoke test (light theme)
         shell: pwsh
         run: ./scripts/smoke-windows.ps1 -Exe dist/framework-dependent/Lumen.Windows.exe -Theme light -MinBrightness 150 -Shot artifacts/theme-light.png
+      - name: Live theme switch repaints the window
+        shell: pwsh
+        run: ./scripts/smoke-windows.ps1 -Exe dist/framework-dependent/Lumen.Windows.exe -Theme dark -ToggleTo light -MinBrightness 150 -Shot artifacts/switch-dark.png -ShotAfterToggle artifacts/switch-light.png
       - uses: actions/upload-artifact@v7
         if: always()
         with:

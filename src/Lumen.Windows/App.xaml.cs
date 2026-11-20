@@ -23,6 +23,18 @@ public partial class App : Application
         MainWindow = window;
         window.Show();
         await Services.InitializeAsync();
+
+        var smokeTheme = Environment.GetEnvironmentVariable("LUMEN_SMOKE_TOGGLE_THEME");
+        if (!string.IsNullOrWhiteSpace(smokeTheme))
+        {
+            var timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(7) };
+            timer.Tick += (_, _) =>
+            {
+                timer.Stop();
+                ThemeManager.Apply(smokeTheme);
+            };
+            timer.Start();
+        }
     }
 
     protected override void OnExit(ExitEventArgs e)

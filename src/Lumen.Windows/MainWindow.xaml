@@ -111,6 +111,11 @@
                    FontWeight="SemiBold" />
       </StackPanel>
       <StackPanel Grid.Column="2" Orientation="Horizontal">
+        <Button Style="{StaticResource WindowButton}" ToolTip="{Binding ThemeTooltip}"
+                Command="{Binding ToggleThemeCommand}"
+                AutomationProperties.Name="切换明暗主题">
+          <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding ThemeGlyph}" FontSize="13" />
+        </Button>
         <Button Style="{StaticResource WindowButton}" ToolTip="最小化" Click="MinimizeButton_Click">
           <Path Data="M2,8 H12" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
                 StrokeThickness="1.1" StrokeStartLineCap="Round" StrokeEndLineCap="Round" />

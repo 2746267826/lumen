@@ -140,6 +140,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
 
         NavigateCommand = new RelayCommand(parameter =>
             Navigate(parameter as string ?? "devices"));
+        ToggleThemeCommand = new RelayCommand(_ => ToggleTheme());
         SetFilterCommand = new RelayCommand(parameter =>
             TransferFilter = parameter as string ?? "all");
         ConnectCommand = Async(ConnectAsync, () => !IsAuthenticating);
@@ -190,6 +191,11 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         OpenDataFolderCommand = new RelayCommand(_ => OpenPath(_settingsStore.DataDirectory));
 
         _relay.ConnectionChanged += RelayOnConnectionChanged;
+        ThemeManager.ThemeChanged += (_, _) =>
+        {
+            OnPropertyChanged(nameof(ThemeGlyph));
+            OnPropertyChanged(nameof(ThemeTooltip));
+        };
         _relay.LatencyChanged += (_, latency) => UiThread.Post(() =>
         {
             LatencyMs = latency;
@@ -217,6 +223,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     public IReadOnlyList<ChunkSizeOption> ChunkOptions { get; }
 
     public ICommand NavigateCommand { get; }
+    public ICommand ToggleThemeCommand { get; }
     public ICommand SetFilterCommand { get; }
     public ICommand ConnectCommand { get; }
     public ICommand RegisterCommand { get; }
@@ -315,6 +322,20 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             _settings.ThemeMode = value.Key;
             ThemeManager.Apply(value.Key);
             _ = PersistThemeAsync();
+        }
+    }
+
+    public string ThemeGlyph => ThemeManager.IsLight ? "\uE708" : "\uE706";
+
+    public string ThemeTooltip => ThemeManager.IsLight ? "切换到深色主题" : "切换到浅色主题";
+
+    private void ToggleTheme()
+    {
+        var target = ThemeManager.IsLight ? ThemeManager.DarkMode : ThemeManager.LightMode;
+        var option = ThemeOptions.FirstOrDefault(x => x.Key == target);
+        if (option is not null)
+        {
+            SelectedTheme = option;
         }
     }
 
