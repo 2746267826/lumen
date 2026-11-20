@@ -79,6 +79,26 @@ public sealed class SendCommandTests
     }
 
     [Fact]
+    public void PeerGoingOnline_RefreshesSendCommands()
+    {
+        OnSta(() =>
+        {
+            var viewModel = CreateViewModel();
+            var peer = Peer(serverOnline: false);
+            viewModel.Devices.Add(peer);
+            Assert.False(viewModel.SendFilesCommand.CanExecute(peer));
+
+            var raised = false;
+            viewModel.SendFilesCommand.CanExecuteChanged += (_, _) => raised = true;
+            peer.ServerOnline = true;
+
+            Assert.True(raised);
+            Assert.True(viewModel.SendFilesCommand.CanExecute(peer));
+            Assert.True(viewModel.SendImageCommand.CanExecute(peer));
+        });
+    }
+
+    [Fact]
     public void ComposeSend_TracksTypedText()
     {
         OnSta(() =>

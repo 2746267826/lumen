@@ -97,7 +97,7 @@ try {
     throw "Main window did not appear within $TimeoutSeconds seconds."
   }
 
-  Start-Sleep -Seconds 3
+  Start-Sleep -Seconds 4
   foreach ($hwnd in [LumenWindowProbe]::WindowsOf([uint32]$process.Id)) {
     if ([LumenWindowProbe]::TitleOf($hwnd) -eq "Lumen 遇到错误") {
       throw "Lumen raised an error dialog after the window appeared."

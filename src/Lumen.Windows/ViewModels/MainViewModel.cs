@@ -1,3 +1,4 @@
+using System.Collections.Specialized;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -121,6 +122,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
                          ?? ThemeOptions[0];
 
         Devices = new ObservableCollection<PeerDevice>();
+        Devices.CollectionChanged += OnDevicesChanged;
         Shares = new ObservableCollection<ShareItem>();
         LocalAddresses = new ObservableCollection<LocalAddressInfo>();
         TransfersView = CollectionViewSource.GetDefaultView(history.Records);
@@ -337,6 +339,42 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         {
             SelectedTheme = option;
         }
+    }
+
+    private void OnDevicesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems is not null)
+        {
+            foreach (PeerDevice peer in e.NewItems)
+            {
+                peer.PropertyChanged += OnPeerPropertyChanged;
+            }
+        }
+
+        if (e.OldItems is not null)
+        {
+            foreach (PeerDevice peer in e.OldItems)
+            {
+                peer.PropertyChanged -= OnPeerPropertyChanged;
+            }
+        }
+
+        RefreshSendCommands();
+    }
+
+    private void OnPeerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(PeerDevice.CanSend) or nameof(PeerDevice.IsOnline))
+        {
+            RefreshSendCommands();
+        }
+    }
+
+    private void RefreshSendCommands()
+    {
+        (SendFilesCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+        (SendImageCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
+        (SendClipboardCommand as AsyncRelayCommand)?.RaiseCanExecuteChanged();
     }
 
     public string CurrentPage
