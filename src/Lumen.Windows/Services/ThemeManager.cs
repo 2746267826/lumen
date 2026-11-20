@@ -50,7 +50,7 @@ public static class ThemeManager
         ["TextBrush"] = ("#F4F6FF", "#151A28"),
         ["MutedBrush"] = ("#909AB3", "#4F5A6E"),
         ["DimBrush"] = ("#656F88", "#6B7588"),
-        ["FaintBrush"] = ("#4F5871", "#7E8899"),
+        ["FaintBrush"] = ("#707A93", "#667184"),
         ["SoftTextBrush"] = ("#B9C2D7", "#3C4659"),
         ["AccentLabelBrush"] = ("#8F86FF", "#5A4ED2"),
         ["AccentTextBrush"] = ("#C8BFFF", "#5A4ED2"),
