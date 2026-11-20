@@ -284,7 +284,7 @@ Dependabot 每周检查 GitHub Actions、Gradle、NuGet 和 Docker 基础镜像�
 - Android 增强：设备卡片显示“服务器中转已连接”与 IPv4/IPv6 地址；系统分享文字入口弹出设备选择；前台服务通知与后台存活验证通过。
 - Windows：`dotnet build` 与服务端互操作逻辑通过编译；当前验收环境为 Linux，WPF 界面运行需在 Windows 上做最终视觉验收。
 - GitHub Actions：`CI` 的服务端、Windows、Android、Docker 四个 job 全部通过；`v1.0.0` Release 已产出 Windows 压缩包、Android Debug/unsigned APK 与 `SHA256SUMS.txt`。
-- Android 签名：本地 `assembleRelease` 已用固定证书签名，`apksigner` 指纹与 keystore 一致；`versionCode` 高于 `v1.0.0`，可覆盖升级。
+- Android 签名：`v1.0.1` 正式包已用固定证书签名，`apksigner` 指纹与 keystore 一致；在真实模拟器上验证了 `1.0.1 (versionCode 3)` 覆盖升级到 `1.0.2 (versionCode 4)`。
 - GHCR：`1.0.0`、`1.0`、`latest`、`sha-*` 标签均已推送，manifest 同时包含 `linux/amd64` 与 `linux/arm64`。
 
 ## 已知限制
