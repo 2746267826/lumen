@@ -54,6 +54,13 @@ jobs:
             "Lumen-${{ steps.version.outputs.value }}.exe"
           Rename-Item dist/windows-framework-dependent/Lumen.Windows.exe `
             "Lumen-${{ steps.version.outputs.value }}.exe"
+      - name: Smoke test the packaged app
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem dist/windows-framework-dependent/*.exe | Select-Object -First 1
+          ./scripts/smoke-windows.ps1 -Exe $exe.FullName -Theme dark -MaxBrightness 90
+          ./scripts/smoke-windows.ps1 -Exe $exe.FullName -Theme light -MinBrightness 150
+          ./scripts/smoke-windows.ps1 -Exe $exe.FullName -Theme dark -ToggleTo light -MinBrightness 150
       - name: Zip Windows packages
         shell: pwsh
         run: |
