@@ -7,7 +7,7 @@
         Icon="Assets/lumen.ico"
         Width="1240" Height="820" MinWidth="1050" MinHeight="690"
         WindowStyle="None" ResizeMode="CanResize" AllowsTransparency="False"
-        Background="{StaticResource BgBrush}"
+        Background="{DynamicResource BgBrush}"
         FontFamily="{StaticResource UiFont}" TextOptions.TextFormattingMode="Display"
         PreviewKeyDown="Window_PreviewKeyDown">
   <shell:WindowChrome.WindowChrome>
@@ -20,12 +20,12 @@
     <Style x:Key="FieldLabel" TargetType="{x:Type TextBlock}">
       <Setter Property="FontSize" Value="11.5" />
       <Setter Property="FontWeight" Value="SemiBold" />
-      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource MutedBrush}" />
       <Setter Property="Margin" Value="0,0,0,7" />
     </Style>
     <Style x:Key="FieldHint" TargetType="{x:Type TextBlock}">
       <Setter Property="FontSize" Value="10.5" />
-      <Setter Property="Foreground" Value="{StaticResource DimBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource DimBrush}" />
       <Setter Property="TextWrapping" Value="Wrap" />
       <Setter Property="Margin" Value="0,5,0,0" />
     </Style>
@@ -37,18 +37,18 @@
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="{x:Type Button}">
-            <Border x:Name="Root" Background="{StaticResource SurfaceBrush}"
-                    BorderBrush="{StaticResource BorderSoftBrush}" BorderThickness="1"
+            <Border x:Name="Root" Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="1"
                     CornerRadius="16" Padding="18,16" Margin="0,0,0,10">
               <ContentPresenter />
             </Border>
             <ControlTemplate.Triggers>
               <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="Root" Property="BorderBrush" Value="{StaticResource BorderStrongBrush}" />
-                <Setter TargetName="Root" Property="Background" Value="{StaticResource CardHoverBrush}" />
+                <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource BorderStrongBrush}" />
+                <Setter TargetName="Root" Property="Background" Value="{DynamicResource CardHoverBrush}" />
               </Trigger>
               <Trigger Property="IsPressed" Value="True">
-                <Setter TargetName="Root" Property="Background" Value="{StaticResource CardPressedBrush}" />
+                <Setter TargetName="Root" Property="Background" Value="{DynamicResource CardPressedBrush}" />
               </Trigger>
             </ControlTemplate.Triggers>
           </ControlTemplate>
@@ -57,23 +57,23 @@
     </Style>
     <Style x:Key="MetricLabel" TargetType="{x:Type TextBlock}">
       <Setter Property="FontSize" Value="10.5" />
-      <Setter Property="Foreground" Value="{StaticResource DimBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource DimBrush}" />
       <Setter Property="Margin" Value="0,0,0,5" />
     </Style>
     <Style x:Key="DetailValue" TargetType="{x:Type TextBlock}">
       <Setter Property="FontSize" Value="12" />
-      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+      <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
       <Setter Property="TextWrapping" Value="Wrap" />
     </Style>
     <Style x:Key="StatusPill" TargetType="{x:Type Border}">
-      <Setter Property="Background" Value="{StaticResource StatusPillBrush}" />
-      <Setter Property="BorderBrush" Value="{StaticResource StatusPillBorderBrush}" />
+      <Setter Property="Background" Value="{DynamicResource StatusPillBrush}" />
+      <Setter Property="BorderBrush" Value="{DynamicResource StatusPillBorderBrush}" />
       <Setter Property="BorderThickness" Value="1" />
       <Setter Property="CornerRadius" Value="10" />
       <Setter Property="Padding" Value="10,6" />
     </Style>
     <Style x:Key="NavBadge" TargetType="{x:Type Border}">
-      <Setter Property="Background" Value="{StaticResource BadgeBrush}" />
+      <Setter Property="Background" Value="{DynamicResource BadgeBrush}" />
       <Setter Property="CornerRadius" Value="7" />
       <Setter Property="Padding" Value="6,2" />
       <Setter Property="HorizontalAlignment" Value="Right" />
@@ -81,13 +81,13 @@
     </Style>
   </Window.Resources>
 
-  <Grid x:Name="RootGrid" Background="{StaticResource BgBrush}">
+  <Grid x:Name="RootGrid" Background="{DynamicResource BgBrush}">
     <Grid.RowDefinitions>
       <RowDefinition Height="44" />
       <RowDefinition Height="*" />
     </Grid.RowDefinitions>
 
-    <Grid x:Name="TitleBar" Grid.Row="0" Background="{StaticResource TitleBarBrush}"
+    <Grid x:Name="TitleBar" Grid.Row="0" Background="{DynamicResource TitleBarBrush}"
           MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="236" />
@@ -95,19 +95,19 @@
         <ColumnDefinition Width="Auto" />
       </Grid.ColumnDefinitions>
       <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
-        <Border Width="22" Height="22" CornerRadius="7" Background="{StaticResource AccentGradient}">
-          <TextBlock Text="L" Foreground="{StaticResource OnAccentBrush}" FontSize="12" FontWeight="Bold"
+        <Border Width="22" Height="22" CornerRadius="7" Background="{DynamicResource AccentGradient}">
+          <TextBlock Text="L" Foreground="{DynamicResource OnAccentBrush}" FontSize="12" FontWeight="Bold"
                      HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
         <TextBlock Text="LUMEN" Margin="9,0,0,0" FontSize="11" FontWeight="SemiBold"
-                   Foreground="{StaticResource TextBrush}" VerticalAlignment="Center" />
+                   Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center" />
         <TextBlock Text="流明互传" Margin="7,0,0,0" FontSize="10.5"
-                   Foreground="{StaticResource DimBrush}" VerticalAlignment="Center" />
+                   Foreground="{DynamicResource DimBrush}" VerticalAlignment="Center" />
       </StackPanel>
       <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"
                   VerticalAlignment="Center">
-        <Ellipse Width="5" Height="5" Fill="{StaticResource GreenBrush}" Margin="0,0,7,0" />
-        <TextBlock Text="LOCAL FIRST · ADAPTIVE RELAY" FontSize="9.5" Foreground="{StaticResource DimBrush}"
+        <Ellipse Width="5" Height="5" Fill="{DynamicResource GreenBrush}" Margin="0,0,7,0" />
+        <TextBlock Text="LOCAL FIRST · ADAPTIVE RELAY" FontSize="9.5" Foreground="{DynamicResource DimBrush}"
                    FontWeight="SemiBold" />
       </StackPanel>
       <StackPanel Grid.Column="2" Orientation="Horizontal">
@@ -132,8 +132,8 @@
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
 
-      <Border Grid.Column="0" Background="{StaticResource SidebarBrush}"
-              BorderBrush="{StaticResource BorderSoftBrush}" BorderThickness="0,0,1,0">
+      <Border Grid.Column="0" Background="{DynamicResource SidebarBrush}"
+              BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,0,1,0">
         <Grid>
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -141,7 +141,7 @@
             <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
           <StackPanel Margin="18,22,18,16">
-            <TextBlock Text="传输中心" FontSize="10" Foreground="{StaticResource DimBrush}"
+            <TextBlock Text="传输中心" FontSize="10" Foreground="{DynamicResource DimBrush}"
                        FontWeight="SemiBold" Margin="9,0,0,10" />
             <RadioButton Style="{StaticResource NavItem}" GroupName="Nav"
                          IsChecked="{Binding IsDevicesPage, Mode=OneWay}"
@@ -157,7 +157,7 @@
                 <TextBlock Grid.Column="1" Text="附近设备" VerticalAlignment="Center" />
                 <Border Grid.Column="2" Style="{StaticResource NavBadge}"
                         Visibility="{Binding OnlineDeviceCount, Converter={StaticResource CountToVis}}">
-                  <TextBlock Text="{Binding OnlineDeviceCount}" FontSize="10" Foreground="{StaticResource AccentTextBrush}" />
+                  <TextBlock Text="{Binding OnlineDeviceCount}" FontSize="10" Foreground="{DynamicResource AccentTextBrush}" />
                 </Border>
               </Grid>
             </RadioButton>
@@ -175,7 +175,7 @@
                 <TextBlock Grid.Column="1" Text="传输记录" VerticalAlignment="Center" />
                 <Border Grid.Column="2" Style="{StaticResource NavBadge}"
                         Visibility="{Binding ActiveTransferCount, Converter={StaticResource CountToVis}}">
-                  <TextBlock Text="{Binding ActiveTransferCount}" FontSize="10" Foreground="{StaticResource AccentTextBrush}" />
+                  <TextBlock Text="{Binding ActiveTransferCount}" FontSize="10" Foreground="{DynamicResource AccentTextBrush}" />
                 </Border>
               </Grid>
             </RadioButton>
@@ -193,7 +193,7 @@
                 <TextBlock Grid.Column="1" Text="分享链接" VerticalAlignment="Center" />
                 <Border Grid.Column="2" Style="{StaticResource NavBadge}"
                         Visibility="{Binding ShareCount, Converter={StaticResource CountToVis}}">
-                  <TextBlock Text="{Binding ShareCount}" FontSize="10" Foreground="{StaticResource AccentTextBrush}" />
+                  <TextBlock Text="{Binding ShareCount}" FontSize="10" Foreground="{DynamicResource AccentTextBrush}" />
                 </Border>
               </Grid>
             </RadioButton>
@@ -220,8 +220,8 @@
                     <ColumnDefinition Width="34" />
                     <ColumnDefinition Width="*" />
                   </Grid.ColumnDefinitions>
-                  <Border Width="32" Height="32" CornerRadius="10" Background="{StaticResource AvatarGradient}">
-                    <TextBlock Text="{Binding AccountInitial}" Foreground="{StaticResource OnAccentBrush}"
+                  <Border Width="32" Height="32" CornerRadius="10" Background="{DynamicResource AvatarGradient}">
+                    <TextBlock Text="{Binding AccountInitial}" Foreground="{DynamicResource OnAccentBrush}"
                                FontWeight="Bold" FontSize="13" HorizontalAlignment="Center"
                                VerticalAlignment="Center" />
                   </Border>
@@ -234,20 +234,20 @@
                 </Grid>
                 <Border Style="{StaticResource Divider}" Margin="0,11,0,10" />
                 <StackPanel Orientation="Horizontal">
-                  <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}"
+                  <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={DynamicResource StringToBrush}}"
                            Margin="0,0,7,0" />
                   <TextBlock Text="{Binding ServerStatus}" FontSize="10.5"
-                             Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" />
+                             Foreground="{DynamicResource MutedBrush}" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
-                  <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={StaticResource StringToBrush}}"
+                  <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={DynamicResource StringToBrush}}"
                            Margin="0,0,7,0" />
                   <TextBlock Text="{Binding LanStatus}" FontSize="10.5"
-                             Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" />
+                             Foreground="{DynamicResource MutedBrush}" TextTrimming="CharacterEllipsis" />
                 </StackPanel>
               </StackPanel>
             </Border>
-            <TextBlock Text="LUMEN 1.0 · NATIVE WPF" FontSize="8.5" Foreground="{StaticResource FaintBrush}"
+            <TextBlock Text="LUMEN 1.0 · NATIVE WPF" FontSize="8.5" Foreground="{DynamicResource FaintBrush}"
                        HorizontalAlignment="Center" />
           </StackPanel>
         </Grid>
@@ -271,20 +271,21 @@
           <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
             <Border Style="{StaticResource StatusPill}" Margin="0,0,8,0">
               <StackPanel Orientation="Horizontal">
-                <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={StaticResource StringToBrush}}"
+                <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={DynamicResource StringToBrush}}"
                          Margin="0,0,7,0" />
-                <TextBlock Text="{Binding LanStatus}" FontSize="10.5" Foreground="{StaticResource MutedBrush}" />
+                <TextBlock Text="{Binding LanStatus}" FontSize="10.5" Foreground="{DynamicResource MutedBrush}" />
               </StackPanel>
             </Border>
             <Border Style="{StaticResource StatusPill}" Margin="0,0,8,0">
               <StackPanel Orientation="Horizontal">
-                <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}"
+                <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={DynamicResource StringToBrush}}"
                          Margin="0,0,7,0" />
-                <TextBlock Text="{Binding ServerStatus}" FontSize="10.5" Foreground="{StaticResource MutedBrush}" />
+                <TextBlock Text="{Binding ServerStatus}" FontSize="10.5" Foreground="{DynamicResource MutedBrush}" />
               </StackPanel>
             </Border>
-            <Button Style="{StaticResource IconButton}" Content="&#xE72C;" ToolTip="刷新"
-                    Command="{Binding RefreshCommand}" />
+            <Button Style="{StaticResource IconButton}" ToolTip="刷新" Command="{Binding RefreshCommand}">
+              <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE72C;" FontSize="13" />
+            </Button>
           </StackPanel>
         </Grid>
 
@@ -292,15 +293,15 @@
                       HorizontalScrollBarVisibility="Disabled"
                       Visibility="{Binding IsDevicesPage, Converter={StaticResource BoolToVis}}">
           <StackPanel Margin="34,0,34,34">
-            <Border CornerRadius="22" Padding="28" Background="{StaticResource HeroGradient}"
-                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+            <Border CornerRadius="22" Padding="28" Background="{DynamicResource HeroGradient}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
               <Grid>
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="300" />
                 </Grid.ColumnDefinitions>
                 <StackPanel VerticalAlignment="Center">
-                  <TextBlock Text="AUTO ROUTING" FontSize="9.5" FontWeight="Bold" Foreground="{StaticResource AccentLabelBrush}" />
+                  <TextBlock Text="AUTO ROUTING" FontSize="9.5" FontWeight="Bold" Foreground="{DynamicResource AccentLabelBrush}" />
                   <TextBlock Text="文件，走最近的路。" Style="{StaticResource DisplayTitle}"
                              FontSize="30" Margin="0,9,0,0" />
                   <TextBlock Text="同一局域网优先直连；跨网络时自动切换到服务器中转。每一条路线、每一个分块都可追踪。"
@@ -308,18 +309,18 @@
                              Margin="0,9,0,0" FontSize="12.5" />
                   <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                     <Border Style="{StaticResource Chip}" Margin="0,0,8,0">
-                      <TextBlock Text="局域网直连" FontSize="10.5" Foreground="{StaticResource TealTextBrush}" />
+                      <TextBlock Text="局域网直连" FontSize="10.5" Foreground="{DynamicResource TealTextBrush}" />
                     </Border>
                     <Border Style="{StaticResource Chip}" Margin="0,0,8,0">
-                      <TextBlock Text="服务器中转" FontSize="10.5" Foreground="{StaticResource AccentTextBrush}" />
+                      <TextBlock Text="服务器中转" FontSize="10.5" Foreground="{DynamicResource AccentTextBrush}" />
                     </Border>
                     <Border Style="{StaticResource Chip}">
-                      <TextBlock Text="IPv4 / IPv6" FontSize="10.5" Foreground="{StaticResource SoftTextBrush}" />
+                      <TextBlock Text="IPv4 / IPv6" FontSize="10.5" Foreground="{DynamicResource SoftTextBrush}" />
                     </Border>
                   </StackPanel>
                 </StackPanel>
-                <Border Grid.Column="1" Margin="24,0,0,0" CornerRadius="18" Background="{StaticResource HeroPanelBrush}"
-                        BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" Padding="18">
+                <Border Grid.Column="1" Margin="24,0,0,0" CornerRadius="18" Background="{DynamicResource HeroPanelBrush}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Padding="18">
                   <Grid>
                     <Grid.RowDefinitions>
                       <RowDefinition Height="Auto" />
@@ -437,8 +438,8 @@
                           <ColumnDefinition Width="*" />
                           <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <Border Width="46" Height="46" CornerRadius="15" Background="{StaticResource AvatarGradient}">
-                          <TextBlock Text="{Binding Initial}" Foreground="{StaticResource OnAccentBrush}" FontSize="18"
+                        <Border Width="46" Height="46" CornerRadius="15" Background="{DynamicResource AvatarGradient}">
+                          <TextBlock Text="{Binding Initial}" Foreground="{DynamicResource OnAccentBrush}" FontSize="18"
                                      FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <StackPanel Grid.Column="1" Margin="12,1,0,0">
@@ -449,24 +450,24 @@
                         </StackPanel>
                         <StackPanel Grid.Column="2" VerticalAlignment="Center">
                           <TextBlock Text="{Binding PlatformGlyph}" Style="{StaticResource IconGlyph}"
-                                     FontSize="18" Foreground="{StaticResource MutedBrush}" HorizontalAlignment="Right" />
+                                     FontSize="18" Foreground="{DynamicResource MutedBrush}" HorizontalAlignment="Right" />
                           <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
                             <Ellipse Width="6" Height="6" Margin="0,0,5,0"
-                                     Fill="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                                     Fill="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
                             <TextBlock Text="{Binding StatusLabel}" FontSize="9"
-                                       Foreground="{StaticResource MutedBrush}" />
+                                       Foreground="{DynamicResource MutedBrush}" />
                           </StackPanel>
                         </StackPanel>
                       </Grid>
                       <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,14,0,0">
                         <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
-                          <TextBlock Text="{Binding PreferredRouteLabel}" FontSize="9.5" Foreground="{StaticResource AccentTextBrush}" />
+                          <TextBlock Text="{Binding PreferredRouteLabel}" FontSize="9.5" Foreground="{DynamicResource AccentTextBrush}" />
                         </Border>
                         <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
-                          <TextBlock Text="{Binding IpFamilyLabel}" FontSize="9.5" Foreground="{StaticResource SoftTextBrush}" />
+                          <TextBlock Text="{Binding IpFamilyLabel}" FontSize="9.5" Foreground="{DynamicResource SoftTextBrush}" />
                         </Border>
                         <Border Style="{StaticResource Chip}">
-                          <TextBlock Text="{Binding LastSeenLabel}" FontSize="9.5" Foreground="{StaticResource MutedBrush}" />
+                          <TextBlock Text="{Binding LastSeenLabel}" FontSize="9.5" Foreground="{DynamicResource MutedBrush}" />
                         </Border>
                       </StackPanel>
                       <TextBlock Grid.Row="2" Text="{Binding AddressSummary}" Style="{StaticResource CaptionText}"
@@ -497,8 +498,8 @@
                                 CommandParameter="{Binding}" IsEnabled="{Binding CanSend}">
                           <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE898;" FontSize="12"
-                                       Foreground="{StaticResource OnAccentBrush}" />
-                            <TextBlock Text="发送" Margin="6,0,0,0" Foreground="{StaticResource OnAccentBrush}" FontWeight="SemiBold" />
+                                       Foreground="{DynamicResource OnAccentBrush}" />
+                            <TextBlock Text="发送" Margin="6,0,0,0" Foreground="{DynamicResource OnAccentBrush}" FontWeight="SemiBold" />
                           </StackPanel>
                         </Button>
                       </Grid>
@@ -511,9 +512,9 @@
             <Border Style="{StaticResource Card}" Visibility="{Binding HasNoDevices, Converter={StaticResource BoolToVis}}"
                     Padding="34" Margin="0,0,0,12">
               <StackPanel HorizontalAlignment="Center">
-                <Border Width="56" Height="56" CornerRadius="18" Background="{StaticResource IconTileBrush}">
+                <Border Width="56" Height="56" CornerRadius="18" Background="{DynamicResource IconTileBrush}">
                   <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE772;" FontSize="23"
-                             Foreground="{StaticResource MutedBrush}" />
+                             Foreground="{DynamicResource MutedBrush}" />
                 </Border>
                 <TextBlock Text="还没有发现设备" Style="{StaticResource SectionTitle}" Margin="0,15,0,0"
                            HorizontalAlignment="Center" />
@@ -581,17 +582,17 @@
                           <ColumnDefinition Width="114" />
                           <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
-                        <Border Width="44" Height="44" CornerRadius="14" Background="{StaticResource IconTileBrush}" VerticalAlignment="Top">
+                        <Border Width="44" Height="44" CornerRadius="14" Background="{DynamicResource IconTileBrush}" VerticalAlignment="Top">
                           <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding KindGlyph}"
-                                     FontSize="18" Foreground="{StaticResource AccentTextBrush}" />
+                                     FontSize="18" Foreground="{DynamicResource AccentTextBrush}" />
                         </Border>
                         <StackPanel Grid.Column="1" Margin="12,0,12,0">
                           <TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="SemiBold"
                                      TextTrimming="CharacterEllipsis" />
                           <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                            <TextBlock Text="{Binding DirectionLabel}" FontSize="10" Foreground="{StaticResource MutedBrush}" />
-                            <TextBlock Text=" · " FontSize="10" Foreground="{StaticResource FaintBrush}" />
-                            <TextBlock Text="{Binding PeerLabel}" FontSize="10" Foreground="{StaticResource MutedBrush}"
+                            <TextBlock Text="{Binding DirectionLabel}" FontSize="10" Foreground="{DynamicResource MutedBrush}" />
+                            <TextBlock Text=" · " FontSize="10" Foreground="{DynamicResource FaintBrush}" />
+                            <TextBlock Text="{Binding PeerLabel}" FontSize="10" Foreground="{DynamicResource MutedBrush}"
                                        TextTrimming="CharacterEllipsis" MaxWidth="180" />
                           </StackPanel>
                           <TextBlock Text="{Binding TimeLabel}" Style="{StaticResource CaptionText}" Margin="0,5,0,0" />
@@ -599,10 +600,10 @@
                         <StackPanel Grid.Column="2" Margin="0,2,12,0">
                           <StackPanel Orientation="Horizontal">
                             <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
-                              <TextBlock Text="{Binding RouteShortLabel}" FontSize="9" Foreground="{StaticResource AccentTextBrush}" />
+                              <TextBlock Text="{Binding RouteShortLabel}" FontSize="9" Foreground="{DynamicResource AccentTextBrush}" />
                             </Border>
                             <Border Style="{StaticResource Chip}">
-                              <TextBlock Text="{Binding IpLabel}" FontSize="9" Foreground="{StaticResource SoftTextBrush}" />
+                              <TextBlock Text="{Binding IpLabel}" FontSize="9" Foreground="{DynamicResource SoftTextBrush}" />
                             </Border>
                           </StackPanel>
                           <TextBlock Text="{Binding AddressLabel}" Style="{StaticResource CaptionText}"
@@ -612,27 +613,27 @@
                           <ProgressBar Style="{StaticResource ProgressTrack}" Height="5"
                                        Value="{Binding ProgressPercent, Mode=OneWay}" Maximum="100" />
                           <Grid Margin="0,7,0,0">
-                            <TextBlock Text="{Binding TransferredLabel}" FontSize="10" Foreground="{StaticResource MutedBrush}" />
-                            <TextBlock Text="{Binding SpeedLabel}" FontSize="10" Foreground="{StaticResource DimBrush}"
+                            <TextBlock Text="{Binding TransferredLabel}" FontSize="10" Foreground="{DynamicResource MutedBrush}" />
+                            <TextBlock Text="{Binding SpeedLabel}" FontSize="10" Foreground="{DynamicResource DimBrush}"
                                        HorizontalAlignment="Right" />
                           </Grid>
                           <TextBlock Text="{Binding ChunkLabel}" Style="{StaticResource CaptionText}"
                                      Margin="0,5,0,0" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
                         <StackPanel Grid.Column="4" VerticalAlignment="Center">
-                          <Border Style="{StaticResource StatusPill}" HorizontalAlignment="Left" Background="{StaticResource StatusPillBrush}">
+                          <Border Style="{StaticResource StatusPill}" HorizontalAlignment="Left" Background="{DynamicResource StatusPillBrush}">
                             <StackPanel Orientation="Horizontal">
                               <Ellipse Width="5" Height="5" Margin="0,0,6,0"
-                                       Fill="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                                       Fill="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
                               <TextBlock Text="{Binding StatusLabel}" FontSize="9.5"
-                                         Foreground="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                                         Foreground="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
                             </StackPanel>
                           </Border>
-                          <TextBlock Text="{Binding ProgressText}" FontSize="10" Foreground="{StaticResource DimBrush}"
+                          <TextBlock Text="{Binding ProgressText}" FontSize="10" Foreground="{DynamicResource DimBrush}"
                                      Margin="0,7,0,0" />
                         </StackPanel>
                         <TextBlock Grid.Column="5" Style="{StaticResource IconGlyph}" Text="&#xE76C;"
-                                   FontSize="11" Foreground="{StaticResource FaintBrush}" />
+                                   FontSize="11" Foreground="{DynamicResource FaintBrush}" />
                       </Grid>
                     </Button>
                   </DataTemplate>
@@ -641,8 +642,8 @@
               <Border Style="{StaticResource Card}" Padding="36" Margin="0,0,0,12"
                       Visibility="{Binding HasNoTransfers, Converter={StaticResource BoolToVis}}">
                 <StackPanel HorizontalAlignment="Center">
-                  <Border Width="56" Height="56" CornerRadius="18" Background="{StaticResource IconTileBrush}">
-                    <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE81C;" FontSize="23" Foreground="{StaticResource MutedBrush}" />
+                  <Border Width="56" Height="56" CornerRadius="18" Background="{DynamicResource IconTileBrush}">
+                    <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE81C;" FontSize="23" Foreground="{DynamicResource MutedBrush}" />
                   </Border>
                   <TextBlock Text="还没有传输记录" Style="{StaticResource SectionTitle}" Margin="0,15,0,0"
                              HorizontalAlignment="Center" />
@@ -661,15 +662,15 @@
                       HorizontalScrollBarVisibility="Disabled"
                       Visibility="{Binding IsSharesPage, Converter={StaticResource BoolToVis}}">
           <StackPanel Margin="34,0,34,34">
-            <Border CornerRadius="20" Padding="24" Background="{StaticResource ShareHeroBrush}"
-                    BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+            <Border CornerRadius="20" Padding="24" Background="{DynamicResource ShareHeroBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
               <Grid>
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                  <TextBlock Text="PUBLIC LINKS" FontSize="9" FontWeight="Bold" Foreground="{StaticResource AccentLabelBrush}" />
+                  <TextBlock Text="PUBLIC LINKS" FontSize="9" FontWeight="Bold" Foreground="{DynamicResource AccentLabelBrush}" />
                   <TextBlock Text="把文件交给任何人，而不安装应用。" Style="{StaticResource SectionTitle}"
                              FontSize="19" Margin="0,7,0,0" />
                   <TextBlock Text="分享链接可设置有效期、访问密码和下载次数上限；到期后自动失效。"
@@ -686,8 +687,8 @@
                   <Button Style="{StaticResource PrimaryButton}" Command="{Binding CreateShareFileCommand}">
                     <StackPanel Orientation="Horizontal">
                       <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE710;" FontSize="12"
-                                 Foreground="{StaticResource OnAccentBrush}" />
-                      <TextBlock Text="分享文件" Margin="7,0,0,0" Foreground="{StaticResource OnAccentBrush}" />
+                                 Foreground="{DynamicResource OnAccentBrush}" />
+                      <TextBlock Text="分享文件" Margin="7,0,0,0" Foreground="{DynamicResource OnAccentBrush}" />
                     </StackPanel>
                   </Button>
                 </StackPanel>
@@ -719,9 +720,9 @@
                         <ColumnDefinition Width="1.1*" />
                         <ColumnDefinition Width="Auto" />
                       </Grid.ColumnDefinitions>
-                      <Border Width="44" Height="44" CornerRadius="14" Background="{StaticResource IconTileBrush}">
+                      <Border Width="44" Height="44" CornerRadius="14" Background="{DynamicResource IconTileBrush}">
                         <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding KindGlyph}"
-                                   FontSize="18" Foreground="{StaticResource TealTextBrush}" />
+                                   FontSize="18" Foreground="{DynamicResource TealTextBrush}" />
                       </Border>
                       <StackPanel Grid.Column="1" Margin="12,0,12,0">
                         <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold"
@@ -737,13 +738,13 @@
                           <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
                             <StackPanel Orientation="Horizontal">
                               <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding ProtectionGlyph}"
-                                         FontSize="9" Foreground="{StaticResource AccentTextBrush}" />
+                                         FontSize="9" Foreground="{DynamicResource AccentTextBrush}" />
                               <TextBlock Text="{Binding ProtectionLabel}" FontSize="9" Margin="5,0,0,0"
-                                         Foreground="{StaticResource AccentTextBrush}" />
+                                         Foreground="{DynamicResource AccentTextBrush}" />
                             </StackPanel>
                           </Border>
                           <Border Style="{StaticResource Chip}">
-                            <TextBlock Text="{Binding SizeLabel}" FontSize="9" Foreground="{StaticResource SoftTextBrush}" />
+                            <TextBlock Text="{Binding SizeLabel}" FontSize="9" Foreground="{DynamicResource SoftTextBrush}" />
                           </Border>
                         </StackPanel>
                         <TextBlock Text="{Binding DownloadLabel}" Style="{StaticResource CaptionText}"
@@ -751,16 +752,20 @@
                       </StackPanel>
                       <StackPanel Grid.Column="3" VerticalAlignment="Center">
                         <TextBlock Text="{Binding StatusLabel}" FontSize="10.5" FontWeight="SemiBold"
-                                   Foreground="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                                   Foreground="{Binding StatusColor, Converter={DynamicResource StringToBrush}}" />
                         <TextBlock Text="{Binding ExpiryLabel}" Style="{StaticResource CaptionText}" Margin="0,5,0,0" />
                       </StackPanel>
                       <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Style="{StaticResource IconButton}" Content="&#xE8C8;" ToolTip="复制链接"
+                        <Button Style="{StaticResource IconButton}" ToolTip="复制链接"
                                 Command="{Binding DataContext.CopyShareUrlCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}" />
-                        <Button Style="{StaticResource IconButton}" Content="&#xE8A7;" ToolTip="打开链接"
+                                CommandParameter="{Binding}">
+                          <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8C8;" FontSize="13" />
+                        </Button>
+                        <Button Style="{StaticResource IconButton}" ToolTip="打开链接"
                                 Command="{Binding DataContext.OpenShareUrlCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}" />
+                                CommandParameter="{Binding}">
+                          <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8A7;" FontSize="13" />
+                        </Button>
                         <Button Style="{StaticResource DangerGhostButton}" Content="撤销" FontSize="10.5"
                                 Padding="8,6"
                                 Command="{Binding DataContext.RevokeShareCommand, RelativeSource={RelativeSource AncestorType=Window}}"
@@ -774,8 +779,8 @@
             <Border Style="{StaticResource Card}" Padding="36"
                     Visibility="{Binding HasNoShares, Converter={StaticResource BoolToVis}}">
               <StackPanel HorizontalAlignment="Center">
-                <Border Width="56" Height="56" CornerRadius="18" Background="{StaticResource IconTileBrush}">
-                  <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE71B;" FontSize="23" Foreground="{StaticResource MutedBrush}" />
+                <Border Width="56" Height="56" CornerRadius="18" Background="{DynamicResource IconTileBrush}">
+                  <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE71B;" FontSize="23" Foreground="{DynamicResource MutedBrush}" />
                 </Border>
                 <TextBlock Text="还没有分享链接" Style="{StaticResource SectionTitle}" Margin="0,15,0,0"
                            HorizontalAlignment="Center" />
@@ -813,9 +818,9 @@
                     <Border Grid.Column="1" Style="{StaticResource StatusPill}" VerticalAlignment="Top">
                       <StackPanel Orientation="Horizontal">
                         <Ellipse Width="5" Height="5" Margin="0,0,6,0"
-                                 Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}" />
+                                 Fill="{Binding ServerStatusColor, Converter={DynamicResource StringToBrush}}" />
                         <TextBlock Text="{Binding ServerStatus}" FontSize="9.5"
-                                   Foreground="{StaticResource MutedBrush}" />
+                                   Foreground="{DynamicResource MutedBrush}" />
                       </StackPanel>
                     </Border>
                   </Grid>
@@ -865,8 +870,8 @@
                       <ColumnDefinition Width="*" />
                       <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Border Width="40" Height="40" CornerRadius="13" Background="{StaticResource AvatarGradient}">
-                      <TextBlock Text="{Binding AccountInitial}" Foreground="{StaticResource OnAccentBrush}" FontWeight="Bold"
+                    <Border Width="40" Height="40" CornerRadius="13" Background="{DynamicResource AvatarGradient}">
+                      <TextBlock Text="{Binding AccountInitial}" Foreground="{DynamicResource OnAccentBrush}" FontWeight="Bold"
                                  HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <StackPanel Grid.Column="1" Margin="12,1,0,0">
@@ -901,11 +906,11 @@
                   </Grid>
                   <TextBlock Text="分块大小" Style="{StaticResource FieldLabel}" Margin="0,14,0,7" />
                   <ComboBox ItemsSource="{Binding ChunkOptions}" DisplayMemberPath="Label"
-                            SelectedItem="{Binding SelectedChunkSize}" />
+                            SelectedItem="{Binding SelectedChunkSize, Mode=TwoWay}" />
                   <TextBlock Text="{Binding ChunkDetailLabel}" Style="{StaticResource FieldHint}" />
                   <TextBlock Text="外观" Style="{StaticResource FieldLabel}" Margin="0,14,0,7" />
                   <ComboBox ItemsSource="{Binding ThemeOptions}" DisplayMemberPath="Label"
-                            SelectedItem="{Binding SelectedTheme}" />
+                            SelectedItem="{Binding SelectedTheme, Mode=TwoWay}" />
                   <TextBlock Text="浅色适合明亮环境，深色适合夜间；跟随系统会使用 Windows 的应用主题。"
                              Style="{StaticResource FieldHint}" />
                   <StackPanel Orientation="Horizontal" Margin="0,17,0,0">
@@ -922,8 +927,10 @@
                 <StackPanel>
                   <Grid>
                     <TextBlock Text="网络诊断" Style="{StaticResource SectionTitle}" />
-                    <Button Style="{StaticResource IconButton}" Content="&#xE72C;"
-                            HorizontalAlignment="Right" Command="{Binding RefreshCommand}" />
+                    <Button Style="{StaticResource IconButton}" HorizontalAlignment="Right"
+                            Command="{Binding RefreshCommand}">
+                      <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE72C;" FontSize="13" />
+                    </Button>
                   </Grid>
                   <Border Style="{StaticResource Divider}" Margin="0,14,0,12" />
                   <Grid Margin="0,0,0,11">
@@ -971,8 +978,10 @@
                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                       <TextBlock Text="{Binding DeviceIdShort}" Style="{StaticResource DetailValue}"
                                  FontFamily="{StaticResource MonoFont}" FontSize="10.5" />
-                      <Button Style="{StaticResource IconButton}" Content="&#xE8C8;" Width="24" Height="24"
-                              Command="{Binding CopyDeviceIdCommand}" />
+                      <Button Style="{StaticResource IconButton}" Width="24" Height="24"
+                              Command="{Binding CopyDeviceIdCommand}">
+                        <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8C8;" FontSize="11" />
+                      </Button>
                     </StackPanel>
                   </Grid>
                   <Border Style="{StaticResource Divider}" Margin="0,4,0,10" />
@@ -985,11 +994,11 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                           </Grid.ColumnDefinitions>
-                          <Border Background="{StaticResource ChipBrush}" CornerRadius="6" Padding="4,2">
-                            <TextBlock Text="{Binding Family}" FontSize="8.5" Foreground="{StaticResource MutedBrush}" />
+                          <Border Background="{DynamicResource ChipBrush}" CornerRadius="6" Padding="4,2">
+                            <TextBlock Text="{Binding Family}" FontSize="8.5" Foreground="{DynamicResource MutedBrush}" />
                           </Border>
                           <TextBlock Grid.Column="1" Text="{Binding Address}" FontFamily="{StaticResource MonoFont}"
-                                     FontSize="10.5" Foreground="{StaticResource SoftTextBrush}" Margin="8,0,8,0"
+                                     FontSize="10.5" Foreground="{DynamicResource SoftTextBrush}" Margin="8,0,8,0"
                                      TextTrimming="CharacterEllipsis" />
                           <TextBlock Grid.Column="2" Text="{Binding InterfaceName}" Style="{StaticResource CaptionText}"
                                      MaxWidth="100" TextTrimming="CharacterEllipsis" />
@@ -1005,9 +1014,9 @@
                 <StackPanel>
                   <TextBlock Text="路线说明" Style="{StaticResource SectionTitle}" />
                   <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
-                    <Border Width="34" Height="34" CornerRadius="10" Background="{StaticResource LanIconBrush}">
+                    <Border Width="34" Height="34" CornerRadius="10" Background="{DynamicResource LanIconBrush}">
                       <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE968;" FontSize="15"
-                                 Foreground="{StaticResource TealTextBrush}" />
+                                 Foreground="{DynamicResource TealTextBrush}" />
                     </Border>
                     <StackPanel Margin="11,0,0,0">
                       <TextBlock Text="局域网直连" FontWeight="SemiBold" FontSize="12" />
@@ -1016,9 +1025,9 @@
                     </StackPanel>
                   </StackPanel>
                   <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
-                    <Border Width="34" Height="34" CornerRadius="10" Background="{StaticResource RelayIconBrush}">
+                    <Border Width="34" Height="34" CornerRadius="10" Background="{DynamicResource RelayIconBrush}">
                       <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE753;" FontSize="15"
-                                 Foreground="{StaticResource AccentTextBrush}" />
+                                 Foreground="{DynamicResource AccentTextBrush}" />
                     </Border>
                     <StackPanel Margin="11,0,0,0">
                       <TextBlock Text="服务器中转" FontWeight="SemiBold" FontSize="12" />
@@ -1038,15 +1047,15 @@
       </Grid>
     </Grid>
 
-    <Grid Grid.RowSpan="2" Panel.ZIndex="80" Background="{StaticResource OverlayBrush}"
+    <Grid Grid.RowSpan="2" Panel.ZIndex="80" Background="{DynamicResource OverlayBrush}"
           Visibility="{Binding IsInviteOpen, Converter={StaticResource BoolToVis}}">
-      <Border Width="500" CornerRadius="24" Background="{StaticResource ModalBrush}" BorderBrush="{StaticResource BorderBrush}"
+      <Border Width="500" CornerRadius="24" Background="{DynamicResource ModalBrush}" BorderBrush="{DynamicResource BorderBrush}"
               BorderThickness="1" Padding="28" HorizontalAlignment="Center" VerticalAlignment="Center"
-              Effect="{StaticResource CardShadow}">
+              Effect="{DynamicResource CardShadow}">
         <StackPanel>
           <StackPanel Orientation="Horizontal">
-            <Border Width="54" Height="54" CornerRadius="17" Background="{StaticResource AvatarGradient}">
-              <TextBlock Text="{Binding PendingInvite.PeerInitial}" Foreground="{StaticResource OnAccentBrush}" FontSize="21"
+            <Border Width="54" Height="54" CornerRadius="17" Background="{DynamicResource AvatarGradient}">
+              <TextBlock Text="{Binding PendingInvite.PeerInitial}" Foreground="{DynamicResource OnAccentBrush}" FontSize="21"
                          FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Border>
             <StackPanel Margin="14,3,0,0">
@@ -1061,9 +1070,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
               </Grid.ColumnDefinitions>
-              <Border Width="42" Height="42" CornerRadius="13" Background="{StaticResource IconTileBrush}">
+              <Border Width="42" Height="42" CornerRadius="13" Background="{DynamicResource IconTileBrush}">
                 <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding PendingInvite.KindGlyph}"
-                           FontSize="18" Foreground="{StaticResource AccentTextBrush}" />
+                           FontSize="18" Foreground="{DynamicResource AccentTextBrush}" />
               </Border>
               <StackPanel Grid.Column="1" Margin="11,0,10,0">
                 <TextBlock Text="{Binding PendingInvite.Name}" FontSize="13" FontWeight="SemiBold"
@@ -1072,7 +1081,7 @@
                            Margin="0,4,0,0" />
               </StackPanel>
               <Border Grid.Column="2" Style="{StaticResource Chip}" VerticalAlignment="Center">
-                <TextBlock Text="{Binding PendingInvite.RouteShortLabel}" FontSize="9" Foreground="{StaticResource AccentTextBrush}" />
+                <TextBlock Text="{Binding PendingInvite.RouteShortLabel}" FontSize="9" Foreground="{DynamicResource AccentTextBrush}" />
               </Border>
             </Grid>
           </Border>
@@ -1094,11 +1103,11 @@
       </Border>
     </Grid>
 
-    <Grid Grid.RowSpan="2" Panel.ZIndex="82" Background="{StaticResource OverlayBrush}"
+    <Grid Grid.RowSpan="2" Panel.ZIndex="82" Background="{DynamicResource OverlayBrush}"
           Visibility="{Binding IsComposeOpen, Converter={StaticResource BoolToVis}}">
-      <Border Width="560" CornerRadius="24" Background="{StaticResource ModalBrush}" BorderBrush="{StaticResource BorderBrush}"
+      <Border Width="560" CornerRadius="24" Background="{DynamicResource ModalBrush}" BorderBrush="{DynamicResource BorderBrush}"
               BorderThickness="1" Padding="26" HorizontalAlignment="Center" VerticalAlignment="Center"
-              Effect="{StaticResource CardShadow}">
+              Effect="{DynamicResource CardShadow}">
         <StackPanel>
           <Grid>
             <StackPanel>
@@ -1106,8 +1115,10 @@
               <TextBlock Text="{Binding ComposeTargetLabel, StringFormat='发送到 {0}'}"
                          Style="{StaticResource MutedText}" Margin="0,4,0,0" />
             </StackPanel>
-            <Button Style="{StaticResource IconButton}" Content="&#xE8BB;"
-                    Command="{Binding CloseComposeCommand}" HorizontalAlignment="Right" />
+            <Button Style="{StaticResource IconButton}" Command="{Binding CloseComposeCommand}"
+                    HorizontalAlignment="Right">
+              <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8BB;" FontSize="13" />
+            </Button>
           </Grid>
           <TextBox Style="{StaticResource DarkTextBox}" Margin="0,20,0,8"
                    Text="{Binding ComposeText, UpdateSourceTrigger=PropertyChanged}"
@@ -1132,11 +1143,11 @@
       </Border>
     </Grid>
 
-    <Grid Grid.RowSpan="2" Panel.ZIndex="84" Background="{StaticResource OverlayBrush}"
+    <Grid Grid.RowSpan="2" Panel.ZIndex="84" Background="{DynamicResource OverlayBrush}"
           Visibility="{Binding IsShareDialogOpen, Converter={StaticResource BoolToVis}}">
-      <Border Width="560" CornerRadius="24" Background="{StaticResource ModalBrush}" BorderBrush="{StaticResource BorderBrush}"
+      <Border Width="560" CornerRadius="24" Background="{DynamicResource ModalBrush}" BorderBrush="{DynamicResource BorderBrush}"
               BorderThickness="1" Padding="26" HorizontalAlignment="Center" VerticalAlignment="Center"
-              Effect="{StaticResource CardShadow}">
+              Effect="{DynamicResource CardShadow}">
         <Grid>
           <StackPanel Visibility="{Binding HasCreatedShare, Converter={StaticResource InverseBoolToVis}}">
             <Grid>
@@ -1145,8 +1156,10 @@
                 <TextBlock Text="链接可在浏览器中直接访问，无需安装 Lumen。" Style="{StaticResource MutedText}"
                            Margin="0,4,0,0" />
               </StackPanel>
-              <Button Style="{StaticResource IconButton}" Content="&#xE8BB;"
-                      Command="{Binding CloseShareDialogCommand}" HorizontalAlignment="Right" />
+              <Button Style="{StaticResource IconButton}" Command="{Binding CloseShareDialogCommand}"
+                      HorizontalAlignment="Right">
+                <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8BB;" FontSize="13" />
+              </Button>
             </Grid>
             <Border Style="{StaticResource SoftCard}" Margin="0,18,0,14" Padding="14">
               <StackPanel>
@@ -1197,15 +1210,15 @@
                       Command="{Binding CloseShareDialogCommand}" />
               <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Height="40" Margin="6,0,0,0"
                       Command="{Binding ConfirmShareCommand}" IsEnabled="{Binding IsNotCreatingShare}">
-                <TextBlock Text="创建分享链接" Foreground="{StaticResource OnAccentBrush}" />
+                <TextBlock Text="创建分享链接" Foreground="{DynamicResource OnAccentBrush}" />
               </Button>
             </Grid>
           </StackPanel>
           <StackPanel Visibility="{Binding HasCreatedShare, Converter={StaticResource BoolToVis}}">
             <StackPanel HorizontalAlignment="Center">
-              <Border Width="62" Height="62" CornerRadius="20" Background="{StaticResource SuccessTileBrush}">
+              <Border Width="62" Height="62" CornerRadius="20" Background="{DynamicResource SuccessTileBrush}">
                 <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE73E;" FontSize="25"
-                           Foreground="{StaticResource TealTextBrush}" />
+                           Foreground="{DynamicResource TealTextBrush}" />
               </Border>
               <TextBlock Text="分享链接已创建" Style="{StaticResource SectionTitle}" FontSize="20"
                          Margin="0,14,0,0" HorizontalAlignment="Center" />
@@ -1214,7 +1227,7 @@
             </StackPanel>
             <Border Style="{StaticResource SoftCard}" Margin="0,20,0,0">
               <TextBox Text="{Binding CreatedShare.Url, Mode=OneWay}" IsReadOnly="True"
-                       Background="Transparent" BorderThickness="0" Foreground="{StaticResource TextBrush}"
+                       Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextBrush}"
                        FontFamily="{StaticResource MonoFont}" FontSize="11" TextWrapping="Wrap"
                        Padding="0" />
             </Border>
@@ -1237,10 +1250,10 @@
       </Border>
     </Grid>
 
-    <Grid Grid.RowSpan="2" Panel.ZIndex="86" Background="{StaticResource ScrimBrush}"
+    <Grid Grid.RowSpan="2" Panel.ZIndex="86" Background="{DynamicResource ScrimBrush}"
           Visibility="{Binding IsDetailOpen, Converter={StaticResource BoolToVis}}">
-      <Border Width="550" HorizontalAlignment="Right" Background="{StaticResource DetailBrush}"
-              BorderBrush="{StaticResource BorderBrush}" BorderThickness="1,0,0,0" Effect="{StaticResource CardShadow}">
+      <Border Width="550" HorizontalAlignment="Right" Background="{DynamicResource DetailBrush}"
+              BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1,0,0,0" Effect="{DynamicResource CardShadow}">
         <Grid>
           <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -1253,8 +1266,10 @@
               <TextBlock Text="{Binding SelectedTransfer.FullTimeLabel}" Style="{StaticResource CaptionText}"
                          Margin="0,4,0,0" />
             </StackPanel>
-            <Button Style="{StaticResource IconButton}" Content="&#xE8BB;"
-                    Command="{Binding CloseDetailCommand}" HorizontalAlignment="Right" />
+            <Button Style="{StaticResource IconButton}" Command="{Binding CloseDetailCommand}"
+                    HorizontalAlignment="Right">
+              <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8BB;" FontSize="13" />
+            </Button>
           </Grid>
           <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
                         HorizontalScrollBarVisibility="Disabled">
@@ -1265,9 +1280,9 @@
                   <ColumnDefinition Width="*" />
                   <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Border Width="52" Height="52" CornerRadius="16" Background="{StaticResource IconTileBrush}">
+                <Border Width="52" Height="52" CornerRadius="16" Background="{DynamicResource IconTileBrush}">
                   <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding SelectedTransfer.KindGlyph}"
-                             FontSize="21" Foreground="{StaticResource AccentTextBrush}" />
+                             FontSize="21" Foreground="{DynamicResource AccentTextBrush}" />
                 </Border>
                 <StackPanel Grid.Column="1" Margin="12,1,10,0">
                   <TextBlock Text="{Binding SelectedTransfer.Name}" FontSize="14.5" FontWeight="SemiBold"
@@ -1278,9 +1293,9 @@
                 <Border Grid.Column="2" Style="{StaticResource StatusPill}" VerticalAlignment="Top">
                   <StackPanel Orientation="Horizontal">
                     <Ellipse Width="5" Height="5" Margin="0,0,6,0"
-                             Fill="{Binding SelectedTransfer.StatusColor, Converter={StaticResource StringToBrush}}" />
+                             Fill="{Binding SelectedTransfer.StatusColor, Converter={DynamicResource StringToBrush}}" />
                     <TextBlock Text="{Binding SelectedTransfer.StatusLabel}" FontSize="9.5"
-                               Foreground="{Binding SelectedTransfer.StatusColor, Converter={StaticResource StringToBrush}}" />
+                               Foreground="{Binding SelectedTransfer.StatusColor, Converter={DynamicResource StringToBrush}}" />
                   </StackPanel>
                 </Border>
               </Grid>
@@ -1291,9 +1306,9 @@
                 <StackPanel>
                   <Grid>
                     <TextBlock Text="{Binding SelectedTransfer.TransferredLabel}" FontSize="10.5"
-                               Foreground="{StaticResource MutedBrush}" />
+                               Foreground="{DynamicResource MutedBrush}" />
                     <TextBlock Text="{Binding SelectedTransfer.ProgressText}" FontSize="10.5"
-                               Foreground="{StaticResource TealBrush}" HorizontalAlignment="Right" />
+                               Foreground="{DynamicResource TealBrush}" HorizontalAlignment="Right" />
                   </Grid>
                   <ProgressBar Style="{StaticResource ProgressTrack}" Margin="0,9,0,0" Height="6"
                                Value="{Binding SelectedTransfer.ProgressPercent, Mode=OneWay}" Maximum="100" />
@@ -1395,7 +1410,7 @@
                   </ScrollViewer>
                 </Border>
               </StackPanel>
-              <TextBlock Text="{Binding SelectedTransfer.ErrorLabel}" Foreground="{StaticResource DangerBrush}"
+              <TextBlock Text="{Binding SelectedTransfer.ErrorLabel}" Foreground="{DynamicResource DangerBrush}"
                          FontSize="11" TextWrapping="Wrap" Margin="0,14,0,0"
                          Visibility="{Binding SelectedTransfer.ErrorLabel, Converter={StaticResource EmptyStringToVis}}" />
               <Grid Margin="0,22,0,9">
@@ -1412,14 +1427,14 @@
                         <ColumnDefinition Width="*" />
                       </Grid.ColumnDefinitions>
                       <Grid>
-                        <Border Width="7" Height="7" CornerRadius="4" Background="{StaticResource AccentDeepBrush}"
+                        <Border Width="7" Height="7" CornerRadius="4" Background="{DynamicResource AccentDeepBrush}"
                                 VerticalAlignment="Top" Margin="0,5,0,0" />
-                        <Border Width="1" Background="{StaticResource TimelineBrush}" VerticalAlignment="Stretch" Margin="3,14,0,0" />
+                        <Border Width="1" Background="{DynamicResource TimelineBrush}" VerticalAlignment="Stretch" Margin="3,14,0,0" />
                       </Grid>
                       <StackPanel Grid.Column="1" Margin="7,0,0,0">
                         <Grid>
                           <TextBlock Text="{Binding TypeLabel}" FontSize="11" FontWeight="SemiBold"
-                                     Foreground="{StaticResource SoftTextBrush}" />
+                                     Foreground="{DynamicResource SoftTextBrush}" />
                           <TextBlock Text="{Binding TimeLabel}" Style="{StaticResource CaptionText}"
                                      HorizontalAlignment="Right" />
                         </Grid>
@@ -1431,7 +1446,7 @@
               </ItemsControl>
             </StackPanel>
           </ScrollViewer>
-          <Border Grid.Row="2" Background="{StaticResource FooterBrush}" BorderBrush="{StaticResource BorderSoftBrush}" BorderThickness="0,1,0,0"
+          <Border Grid.Row="2" Background="{DynamicResource FooterBrush}" BorderBrush="{DynamicResource BorderSoftBrush}" BorderThickness="0,1,0,0"
                   Padding="24,14">
             <StackPanel Orientation="Horizontal">
               <Button Style="{StaticResource PrimaryButton}" Content="打开文件" Margin="0,0,7,0"
@@ -1452,14 +1467,14 @@
     </Grid>
 
     <Border Grid.RowSpan="2" Panel.ZIndex="200" HorizontalAlignment="Center" VerticalAlignment="Bottom"
-            Margin="0,0,0,26" Background="{StaticResource ToastBrush}" BorderBrush="{StaticResource ToastBorderBrush}" BorderThickness="1"
+            Margin="0,0,0,26" Background="{DynamicResource ToastBrush}" BorderBrush="{DynamicResource ToastBorderBrush}" BorderThickness="1"
             CornerRadius="12" Padding="18,11"
             Visibility="{Binding ToastVisible, Converter={StaticResource BoolToVis}}">
       <StackPanel Orientation="Horizontal">
         <Ellipse Width="6" Height="6" Margin="0,0,9,0"
-                 Fill="{Binding ToastColor, Converter={StaticResource StringToBrush}}" />
+                 Fill="{Binding ToastColor, Converter={DynamicResource StringToBrush}}" />
         <TextBlock Text="{Binding ToastMessage}" FontSize="11.5" MaxWidth="560" TextWrapping="Wrap"
-                   Foreground="{Binding ToastColor, Converter={StaticResource StringToBrush}}" />
+                   Foreground="{Binding ToastColor, Converter={DynamicResource StringToBrush}}" />
       </StackPanel>
     </Border>
   </Grid>

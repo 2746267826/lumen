@@ -50,6 +50,10 @@ jobs:
             -p:DebugType=None -p:DebugSymbols=false `
             -p:Version=${{ steps.version.outputs.value }} `
             -o dist/windows-framework-dependent
+          Rename-Item dist/windows-self-contained/Lumen.Windows.exe `
+            "Lumen-${{ steps.version.outputs.value }}.exe"
+          Rename-Item dist/windows-framework-dependent/Lumen.Windows.exe `
+            "Lumen-${{ steps.version.outputs.value }}.exe"
       - name: Zip Windows packages
         shell: pwsh
         run: |
@@ -167,23 +171,7 @@ jobs:
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Lumen ${{ env.RELEASE_TAG }}
-          generate_release_notes: true
           prerelease: ${{ contains(env.RELEASE_TAG, '-') }}
-          body: |
-            ## 下载
-
-            - **Windows x64（自带运行时）**：解压 `Lumen-Windows-x64-self-contained-*.zip`，直接运行 `Lumen.Windows.exe`
-            - **Windows x64（需 .NET 8 桌面运行时）**：解压 `Lumen-Windows-x64-framework-dependent-*.zip`，安装 [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) 后运行
-            - **Android**：`Lumen-Android-*.apk` 使用固定 Release 证书签名，后续版本可覆盖升级；签名信息见 `ANDROID-CERTIFICATE.txt`
-
-            ## Docker
-
-            镜像同时推送到 GHCR：
-
-            ```bash
-            docker pull ghcr.io/${{ github.repository }}:latest
-            ```
-
-            详细部署说明见仓库 README。
+          body_path: RELEASE_NOTES.md
           files: dist/*
           fail_on_unmatched_files: true

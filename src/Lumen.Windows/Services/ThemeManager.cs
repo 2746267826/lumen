@@ -73,9 +73,28 @@ public static class ThemeManager
 
     private static readonly string[] HeroGradientDark = ["#202140", "#161B2C", "#112625"];
     private static readonly string[] HeroGradientLight = ["#EEF1FF", "#F6F9FF", "#E7FAF5"];
+    private static readonly Dictionary<string, string> LightAccentOverrides = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["#55DCA8"] = "#0C855B",
+        ["#5EE1B7"] = "#0C855B",
+        ["#62E0D0"] = "#0E8C7C",
+        ["#55DFC9"] = "#0E8C7C",
+        ["#4EE3C2"] = "#0E8C7C",
+        ["#FF8795"] = "#C22F45",
+        ["#FF6B81"] = "#C22F45",
+        ["#F1BD69"] = "#966310",
+        ["#FFBB6B"] = "#966310",
+        ["#FFC45C"] = "#966310",
+        ["#8D80FF"] = "#5A4ED2",
+        ["#B9B1FF"] = "#5A4ED2",
+        ["#7B849E"] = "#5A6578",
+        ["#909AB3"] = "#4F5A6E",
+        ["#98A1BA"] = "#4F5A6E"
+    };
 
     public static bool IsLight { get; private set; }
     public static string EffectiveMode { get; private set; } = DarkMode;
+    public static event EventHandler? ThemeChanged;
 
     public static string Resolve(string? mode)
     {
@@ -101,6 +120,7 @@ public static class ThemeManager
         {
             EffectiveMode = effective;
             IsLight = light;
+            ThemeChanged?.Invoke(null, EventArgs.Empty);
             return;
         }
 
@@ -109,70 +129,64 @@ public static class ThemeManager
 
         foreach (var (key, palette) in Palette)
         {
-            if (app.TryFindResource(key) is SolidColorBrush brush)
-            {
-                TrySetColor(brush, Parse(light ? palette.Light : palette.Dark));
-            }
+            app.Resources[key] = new SolidColorBrush(Parse(light ? palette.Light : palette.Dark));
         }
 
-        ApplyGradient(app, "HeroGradient", light ? HeroGradientLight : HeroGradientDark);
-
-        if (app.TryFindResource("CardShadow") is DropShadowEffect cardShadow)
+        app.Resources["HeroGradient"] = CreateGradient(
+            light ? HeroGradientLight : HeroGradientDark,
+            [0d, 0.55d, 1d]);
+        app.Resources["CardShadow"] = new DropShadowEffect
         {
-            if (!cardShadow.IsFrozen)
-            {
-                cardShadow.Opacity = light ? 0.12 : 0.22;
-                cardShadow.ShadowDepth = light ? 4 : 8;
-            }
+            BlurRadius = 32,
+            ShadowDepth = light ? 4 : 8,
+            Opacity = light ? 0.12 : 0.22,
+            Color = Colors.Black
+        };
+        app.Resources["AccentGlow"] = new DropShadowEffect
+        {
+            BlurRadius = 28,
+            ShadowDepth = 0,
+            Opacity = light ? 0.20 : 0.34,
+            Color = Parse("#7C6DFF")
+        };
+
+        ThemeChanged?.Invoke(null, EventArgs.Empty);
+    }
+
+    public static Color MapAccent(string? raw)
+    {
+        var value = string.IsNullOrWhiteSpace(raw) ? "#98A1BA" : raw.Trim();
+        if (IsLight && LightAccentOverrides.TryGetValue(value, out var replacement))
+        {
+            value = replacement;
         }
 
-        if (app.TryFindResource("AccentGlow") is DropShadowEffect accentGlow)
+        try
         {
-            if (!accentGlow.IsFrozen)
-            {
-                accentGlow.Opacity = light ? 0.20 : 0.34;
-            }
+            return Parse(value);
+        }
+        catch
+        {
+            return Parse("#98A1BA");
         }
     }
 
-    private static void ApplyGradient(
-        Application app,
-        string key,
-        IReadOnlyList<string> colors)
+    private static LinearGradientBrush CreateGradient(
+        IReadOnlyList<string> colors,
+        IReadOnlyList<double> offsets)
     {
-        if (app.TryFindResource(key) is not LinearGradientBrush gradient ||
-            gradient.GradientStops.Count != colors.Count)
+        var brush = new LinearGradientBrush
         {
-            return;
-        }
+            StartPoint = new Point(0, 0),
+            EndPoint = new Point(1, 1)
+        };
 
         for (var index = 0; index < colors.Count; index++)
         {
-            var stop = gradient.GradientStops[index];
-            if (stop.IsFrozen)
-            {
-                return;
-            }
-
-            stop.Color = Parse(colors[index]);
+            brush.GradientStops.Add(new GradientStop(Parse(colors[index]), offsets[index]));
         }
-    }
 
-    private static void TrySetColor(SolidColorBrush brush, Color color)
-    {
-        try
-        {
-            if (brush.IsFrozen)
-            {
-                return;
-            }
-
-            brush.Color = color;
-        }
-        catch (InvalidOperationException)
-        {
-            // A frozen brush cannot be updated; leave the current palette intact.
-        }
+        return brush;
     }
 
     private static Color Parse(string hex) =>

@@ -42,7 +42,7 @@ fun LumenBackdrop(content: @Composable () -> Unit) {
             .fillMaxWidth()
             .background(
                 Brush.verticalGradient(
-                    listOf(LumenBackgroundDeep, LumenBackground, Color(0xFF0A1226))
+                    listOf(LumenBackdropStart, LumenBackground, LumenBackdropEnd)
                 )
             )
     ) {
@@ -81,7 +81,7 @@ fun LumenCard(
                 Brush.linearGradient(
                     listOf(
                         LumenSurface.copy(alpha = 0.98f),
-                        Color(0xFF101A38).copy(alpha = 0.96f)
+                        LumenSurfaceHigh.copy(alpha = 0.96f)
                     )
                 )
             )
@@ -95,15 +95,16 @@ fun LumenCard(
 @Composable
 fun TagChip(
     text: String,
-    color: Color = LumenPrimary,
+    color: Color? = null,
     icon: ImageVector? = null,
     modifier: Modifier = Modifier
 ) {
+    val chipColor = color ?: LumenPrimary
     Row(
         modifier = modifier
             .clip(CircleShape)
-            .background(color.copy(alpha = 0.13f))
-            .border(1.dp, color.copy(alpha = 0.28f), CircleShape)
+            .background(chipColor.copy(alpha = 0.13f))
+            .border(1.dp, chipColor.copy(alpha = 0.28f), CircleShape)
             .padding(horizontal = 9.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -111,14 +112,14 @@ fun TagChip(
             Icon(
                 icon,
                 contentDescription = null,
-                tint = color,
+                tint = chipColor,
                 modifier = Modifier.size(13.dp)
             )
             Spacer(Modifier.width(5.dp))
         }
         Text(
             text,
-            color = color,
+            color = chipColor,
             fontSize = 11.sp,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1
@@ -227,11 +228,12 @@ fun PlatformAvatar(platform: String, size: Int = 46) {
 }
 
 @Composable
-fun Metric(label: String, value: String, accent: Color = LumenText) {
+fun Metric(label: String, value: String, accent: Color? = null) {
+    val valueColor = accent ?: LumenText
     Column {
         Text(label, fontSize = 11.sp, color = LumenTextMuted)
         Spacer(Modifier.height(2.dp))
-        Text(value, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = accent)
+        Text(value, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = valueColor)
     }
 }
 

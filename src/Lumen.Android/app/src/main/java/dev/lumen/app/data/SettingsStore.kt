@@ -106,6 +106,10 @@ class SettingsStore(context: Context) {
         get() = prefs.getInt("chunk_size", 1024 * 1024)
         set(value) = prefs.edit().putInt("chunk_size", value.coerceIn(64 * 1024, 8 * 1024 * 1024)).apply()
 
+    var themeMode: String
+        get() = prefs.getString("theme_mode", "system") ?: "system"
+        set(value) = prefs.edit().putString("theme_mode", value).apply()
+
     val isLoggedIn: Boolean get() = token.isNotBlank() && userId.isNotBlank()
 
     fun saveAuth(auth: AuthResponse) {

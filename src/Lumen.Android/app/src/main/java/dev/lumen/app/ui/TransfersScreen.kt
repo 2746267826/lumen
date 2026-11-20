@@ -213,6 +213,7 @@ private fun FilterPill(text: String, selected: Boolean, onClick: () -> Unit) {
     }
 }
 
+@Composable
 fun statusColor(status: String): Color = when (status) {
     TransferStatus.COMPLETED -> LumenSuccess
     TransferStatus.FAILED, TransferStatus.DECLINED -> LumenDanger

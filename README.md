@@ -51,10 +51,15 @@ Lumen 把「传个文件」这件事做得既快又清楚。同一个账户下�
 ### 原生客户端，而不是网页壳
 
 - Windows 使用 **WPF (.NET 8)**，Android 使用 **Kotlin + Jetpack Compose**，两端都是真正的原生界面。
-- 浅色与深色主题随时切换，也可跟随 Windows 系统主题；两套配色分别调整了文字对比度。
+- Windows 与 Android 都支持浅色、深色和跟随系统主题，两套配色分别调整了文字对比度。
 - 深色玻璃质感、流畅动效与自适应布局，手机横竖屏和桌面窗口都顺手。
 - Windows 支持一键发送剪贴板内容；Android 可从相册、文件管理器或任意应用通过系统分享直接发给某台设备。
 - Android 前台服务保持后台在线与接收，切到后台不会立刻掉线。
+
+<p align="center">
+  <img src="docs/images/android-light.png" width="300" alt="Android 浅色模式与主题切换" />
+</p>
+<p align="center"><sub>Android 浅色模式：跟随系统 / 浅色 / 深色三档切换</sub></p>
 
 ## 开始使用
 
@@ -70,7 +75,7 @@ Lumen 把「传个文件」这件事做得既快又清楚。同一个账户下�
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows 10/11 x64 | `Lumen-Windows-x64-self-contained-<版本>.zip` | 自带 .NET 运行时，解压后直接运行 |
+| Windows 10/11 x64 | `Lumen-Windows-x64-self-contained-<版本>.zip` | 自带 .NET 运行时，解压后运行 `Lumen-<版本>.exe` |
 | Windows 10/11 x64 | `Lumen-Windows-x64-framework-dependent-<版本>.zip` | 体积小，需先安装 .NET 8 桌面运行时 |
 | Android 8.0+ | `Lumen-Android-<版本>.apk` | 固定证书签名，可直接覆盖升级 |
 | Linux 服务器 | `ghcr.io/2746267826/lumen:latest` | amd64 / arm64 多架构镜像 |

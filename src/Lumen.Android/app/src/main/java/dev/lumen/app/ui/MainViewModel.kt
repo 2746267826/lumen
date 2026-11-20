@@ -64,6 +64,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _chunkSize = MutableStateFlow(settings.chunkSize)
     val chunkSize: StateFlow<Int> = _chunkSize.asStateFlow()
 
+    private val _themeMode = MutableStateFlow(settings.themeMode)
+    val themeMode: StateFlow<String> = _themeMode.asStateFlow()
+
     private val _busy = MutableStateFlow(false)
     val busy: StateFlow<Boolean> = _busy.asStateFlow()
 
@@ -304,6 +307,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun setChunkSize(value: Int) {
         settings.chunkSize = value
         _chunkSize.value = settings.chunkSize
+    }
+
+    fun setThemeMode(value: String) {
+        settings.themeMode = value
+        _themeMode.value = settings.themeMode
     }
 
     fun clearHistory() {

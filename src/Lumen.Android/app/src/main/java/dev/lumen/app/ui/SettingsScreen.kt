@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Security
@@ -70,6 +71,7 @@ fun SettingsScreen(
     autoAccept: Boolean,
     lanDiscovery: Boolean,
     chunkSize: Int,
+    themeMode: String,
     relayState: RelayState,
     latencyMs: Long?,
     lanRunning: Boolean,
@@ -80,6 +82,7 @@ fun SettingsScreen(
     onSetAutoAccept: (Boolean) -> Unit,
     onSetLanDiscovery: (Boolean) -> Unit,
     onSetChunkSize: (Int) -> Unit,
+    onSetThemeMode: (String) -> Unit,
     onReconnect: () -> Unit,
     onLogout: () -> Unit,
     onClearHistory: () -> Unit,
@@ -213,6 +216,45 @@ fun SettingsScreen(
                 SettingRow(
                     title = "平台",
                     subtitle = "Android · ${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}"
+                )
+            }
+        }
+
+        item {
+            SettingsSection(title = "外观", icon = Icons.Filled.Palette) {
+                Text("主题模式", fontSize = 12.sp, color = LumenTextMuted)
+                Spacer(Modifier.height(8.dp))
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                    listOf(
+                        "system" to "跟随系统",
+                        "light" to "浅色",
+                        "dark" to "深色"
+                    ).forEach { (mode, label) ->
+                        Box(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .background(
+                                    if (themeMode == mode) LumenPrimary.copy(alpha = 0.18f)
+                                    else LumenSurfaceHigh
+                                )
+                                .clickable { onSetThemeMode(mode) }
+                                .padding(horizontal = 13.dp, vertical = 7.dp)
+                        ) {
+                            Text(
+                                label,
+                                fontSize = 11.5.sp,
+                                color = if (themeMode == mode) LumenPrimary else LumenTextMuted,
+                                fontWeight = if (themeMode == mode) FontWeight.SemiBold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+                Spacer(Modifier.height(9.dp))
+                Text(
+                    "浅色适合明亮环境，深色适合夜间；跟随系统会使用 Android 的深色模式设置。",
+                    fontSize = 11.sp,
+                    color = LumenTextMuted,
+                    lineHeight = 17.sp
                 )
             }
         }

@@ -14,6 +14,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,6 +56,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +72,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -107,8 +110,22 @@ class MainActivity : ComponentActivity() {
             captureShareIntent(intent)
         }
         setContent {
-            LumenTheme {
+            val mainViewModel: MainViewModel = viewModel()
+            val themeMode by mainViewModel.themeMode.collectAsStateWithLifecycle()
+            val darkTheme = when (themeMode) {
+                "light" -> false
+                "dark" -> true
+                else -> isSystemInDarkTheme()
+            }
+            SideEffect {
+                WindowCompat.getInsetsController(window, window.decorView).apply {
+                    isAppearanceLightStatusBars = !darkTheme
+                    isAppearanceLightNavigationBars = !darkTheme
+                }
+            }
+            LumenTheme(themeMode) {
                 LumenApp(
+                    viewModel = mainViewModel,
                     sharedPayload = sharedPayload,
                     onConsumeShared = { sharedPayload = null }
                 )
@@ -167,6 +184,7 @@ private fun LumenApp(
     viewModel: MainViewModel = viewModel()
 ) {
     val loggedIn by viewModel.loggedIn.collectAsStateWithLifecycle()
+    val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
     val busy by viewModel.busy.collectAsStateWithLifecycle()
     val busyText by viewModel.busyText.collectAsStateWithLifecycle()
     val snackbarHost = remember { SnackbarHostState() }
@@ -371,6 +389,7 @@ private fun LumenApp(
                             autoAccept = autoAccept,
                             lanDiscovery = lanDiscovery,
                             chunkSize = chunkSize,
+                            themeMode = themeMode,
                             relayState = relayState,
                             latencyMs = latency,
                             lanRunning = lanRunning,
@@ -381,6 +400,7 @@ private fun LumenApp(
                             onSetAutoAccept = viewModel::setAutoAccept,
                             onSetLanDiscovery = viewModel::setLanDiscovery,
                             onSetChunkSize = viewModel::setChunkSize,
+                            onSetThemeMode = viewModel::setThemeMode,
                             onReconnect = viewModel::reconnect,
                             onLogout = viewModel::logout,
                             onClearHistory = viewModel::clearHistory,

@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Lumen.Windows.Services;
 
 namespace Lumen.Windows.Converters;
 
@@ -55,21 +56,51 @@ public sealed class StringEqualsBoolConverter : IValueConverter
 
 public sealed class StringToBrushConverter : IValueConverter
 {
+    private static readonly List<(WeakReference<SolidColorBrush> Brush, string Raw)> Tracked = [];
+    private static readonly object Gate = new();
+
+    static StringToBrushConverter()
+    {
+        ThemeManager.ThemeChanged += (_, _) => RefreshTrackedBrushes();
+    }
+
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        try
+        var raw = value as string ?? "#98A1BA";
+        var brush = new SolidColorBrush(ThemeManager.MapAccent(raw));
+        lock (Gate)
         {
-            return new BrushConverter().ConvertFromString(value as string ?? "#98A1BA")
-                   ?? Brushes.SlateGray;
+            if (Tracked.Count > 512)
+            {
+                Tracked.RemoveAll(x => !x.Brush.TryGetTarget(out _));
+            }
+
+            Tracked.Add((new WeakReference<SolidColorBrush>(brush), raw));
         }
-        catch
-        {
-            return Brushes.SlateGray;
-        }
+
+        return brush;
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
         Binding.DoNothing;
+
+    private static void RefreshTrackedBrushes()
+    {
+        lock (Gate)
+        {
+            for (var index = Tracked.Count - 1; index >= 0; index--)
+            {
+                if (Tracked[index].Brush.TryGetTarget(out var brush))
+                {
+                    brush.Color = ThemeManager.MapAccent(Tracked[index].Raw);
+                }
+                else
+                {
+                    Tracked.RemoveAt(index);
+                }
+            }
+        }
+    }
 }
 
 public sealed class PathToImageConverter : IValueConverter
