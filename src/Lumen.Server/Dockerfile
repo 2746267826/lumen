@@ -11,7 +11,7 @@ RUN dotnet publish src/Lumen.Server/Lumen.Server.csproj \
     -o /app/publish \
     /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:11.0 AS runtime
 WORKDIR /app
 
 RUN apt-get update \
