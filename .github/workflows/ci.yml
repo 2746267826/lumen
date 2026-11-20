@@ -75,7 +75,7 @@ jobs:
           distribution: temurin
           java-version: "17"
           cache: gradle
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@v4
       - name: Install SDK platform
         run: |
           yes | sdkmanager --licenses >/dev/null || true
