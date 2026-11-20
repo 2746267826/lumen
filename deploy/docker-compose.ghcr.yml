@@ -1,0 +1,34 @@
+# Run a published GHCR image instead of building from source.
+#
+#   LUMEN_IMAGE=ghcr.io/OWNER/lumen:latest \
+#   LUMEN_PUBLIC_URL=https://lumen.example.com \
+#   docker compose -f deploy/docker-compose.ghcr.yml up -d
+services:
+  lumen:
+    image: ${LUMEN_IMAGE:-ghcr.io/2746267826/lumen:latest}
+    container_name: lumen-relay
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      Lumen__DataDir: /data
+      Lumen__PublicUrl: ${LUMEN_PUBLIC_URL:-}
+      Lumen__AllowRegistration: ${LUMEN_ALLOW_REGISTRATION:-true}
+      Lumen__RetentionDays: ${LUMEN_RETENTION_DAYS:-14}
+      Lumen__MaxShareBytes: ${LUMEN_MAX_SHARE_BYTES:-21474836480}
+      Lumen__MaxTransferBytes: ${LUMEN_MAX_TRANSFER_BYTES:-214748364800}
+    volumes:
+      - lumen-data:/data
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:8080/api/v1/health
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+volumes:
+  lumen-data:

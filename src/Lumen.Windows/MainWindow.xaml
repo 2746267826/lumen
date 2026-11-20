@@ -1,0 +1,1454 @@
+<Window x:Class="Lumen.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        xmlns:infra="clr-namespace:Lumen.Windows.Infrastructure"
+        Title="Lumen · 流明互传"
+        Width="1240" Height="820" MinWidth="1050" MinHeight="690"
+        WindowStyle="None" ResizeMode="CanResize" AllowsTransparency="False"
+        Background="{StaticResource BgBrush}"
+        FontFamily="{StaticResource UiFont}" TextOptions.TextFormattingMode="Display"
+        PreviewKeyDown="Window_PreviewKeyDown">
+  <shell:WindowChrome.WindowChrome>
+    <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="6"
+                        GlassFrameThickness="0" CornerRadius="0"
+                        UseAeroCaptionButtons="False" />
+  </shell:WindowChrome.WindowChrome>
+
+  <Window.Resources>
+    <Style x:Key="FieldLabel" TargetType="{x:Type TextBlock}">
+      <Setter Property="FontSize" Value="11.5" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="Margin" Value="0,0,0,7" />
+    </Style>
+    <Style x:Key="FieldHint" TargetType="{x:Type TextBlock}">
+      <Setter Property="FontSize" Value="10.5" />
+      <Setter Property="Foreground" Value="{StaticResource DimBrush}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+      <Setter Property="Margin" Value="0,5,0,0" />
+    </Style>
+    <Style x:Key="TransferCardButton" TargetType="{x:Type Button}">
+      <Setter Property="Background" Value="Transparent" />
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+      <Setter Property="Cursor" Value="Hand" />
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="{x:Type Button}">
+            <Border x:Name="Root" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource BorderSoftBrush}" BorderThickness="1"
+                    CornerRadius="16" Padding="18,16" Margin="0,0,0,10">
+              <ContentPresenter />
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Root" Property="BorderBrush" Value="#3A4362" />
+                <Setter TargetName="Root" Property="Background" Value="#141929" />
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="Root" Property="Background" Value="#181E31" />
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+    <Style x:Key="MetricLabel" TargetType="{x:Type TextBlock}">
+      <Setter Property="FontSize" Value="10.5" />
+      <Setter Property="Foreground" Value="{StaticResource DimBrush}" />
+      <Setter Property="Margin" Value="0,0,0,5" />
+    </Style>
+    <Style x:Key="DetailValue" TargetType="{x:Type TextBlock}">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style x:Key="StatusPill" TargetType="{x:Type Border}">
+      <Setter Property="Background" Value="#171D2C" />
+      <Setter Property="BorderBrush" Value="#2A3247" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="10" />
+      <Setter Property="Padding" Value="10,6" />
+    </Style>
+    <Style x:Key="NavBadge" TargetType="{x:Type Border}">
+      <Setter Property="Background" Value="#27224A" />
+      <Setter Property="CornerRadius" Value="7" />
+      <Setter Property="Padding" Value="6,2" />
+      <Setter Property="HorizontalAlignment" Value="Right" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+  </Window.Resources>
+
+  <Grid x:Name="RootGrid" Background="{StaticResource BgBrush}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="44" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <Grid x:Name="TitleBar" Grid.Row="0" Background="#0B0E17"
+          MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="236" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="18,0,0,0">
+        <Border Width="22" Height="22" CornerRadius="7" Background="{StaticResource AccentGradient}">
+          <TextBlock Text="L" Foreground="#0B0D14" FontSize="12" FontWeight="Bold"
+                     HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <TextBlock Text="LUMEN" Margin="9,0,0,0" FontSize="11" FontWeight="SemiBold"
+                   Foreground="#DCE1F2" VerticalAlignment="Center" />
+        <TextBlock Text="流明互传" Margin="7,0,0,0" FontSize="10.5"
+                   Foreground="{StaticResource DimBrush}" VerticalAlignment="Center" />
+      </StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+        <Ellipse Width="5" Height="5" Fill="{StaticResource GreenBrush}" Margin="0,0,7,0" />
+        <TextBlock Text="LOCAL FIRST · ADAPTIVE RELAY" FontSize="9.5" Foreground="#6F7891"
+                   FontWeight="SemiBold" />
+      </StackPanel>
+      <StackPanel Grid.Column="2" Orientation="Horizontal">
+        <Button Style="{StaticResource WindowButton}" Content="&#xE921;" ToolTip="最小化"
+                Click="MinimizeButton_Click" />
+        <Button Style="{StaticResource WindowButton}" Content="&#xE922;" ToolTip="最大化 / 还原"
+                Click="MaximizeButton_Click" />
+        <Button Style="{StaticResource WindowButtonClose}" Content="&#xE8BB;" ToolTip="关闭"
+                Click="CloseButton_Click" />
+      </StackPanel>
+    </Grid>
+
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="236" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <Border Grid.Column="0" Background="{StaticResource SidebarBrush}"
+              BorderBrush="#1A2030" BorderThickness="0,0,1,0">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <StackPanel Margin="18,22,18,16">
+            <TextBlock Text="传输中心" FontSize="10" Foreground="{StaticResource DimBrush}"
+                       FontWeight="SemiBold" Margin="9,0,0,10" />
+            <RadioButton Style="{StaticResource NavItem}" GroupName="Nav"
+                         IsChecked="{Binding IsDevicesPage, Mode=OneWay}"
+                         Command="{Binding NavigateCommand}" CommandParameter="devices">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="26" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE772;" FontSize="15"
+                           HorizontalAlignment="Left" />
+                <TextBlock Grid.Column="1" Text="附近设备" VerticalAlignment="Center" />
+                <Border Grid.Column="2" Style="{StaticResource NavBadge}"
+                        Visibility="{Binding OnlineDeviceCount, Converter={StaticResource CountToVis}}">
+                  <TextBlock Text="{Binding OnlineDeviceCount}" FontSize="10" Foreground="#B9B1FF" />
+                </Border>
+              </Grid>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavItem}" GroupName="Nav"
+                         IsChecked="{Binding IsTransfersPage, Mode=OneWay}"
+                         Command="{Binding NavigateCommand}" CommandParameter="transfers">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="26" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE81C;" FontSize="15"
+                           HorizontalAlignment="Left" />
+                <TextBlock Grid.Column="1" Text="传输记录" VerticalAlignment="Center" />
+                <Border Grid.Column="2" Style="{StaticResource NavBadge}"
+                        Visibility="{Binding ActiveTransferCount, Converter={StaticResource CountToVis}}">
+                  <TextBlock Text="{Binding ActiveTransferCount}" FontSize="10" Foreground="#B9B1FF" />
+                </Border>
+              </Grid>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavItem}" GroupName="Nav"
+                         IsChecked="{Binding IsSharesPage, Mode=OneWay}"
+                         Command="{Binding NavigateCommand}" CommandParameter="shares">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="26" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE71B;" FontSize="15"
+                           HorizontalAlignment="Left" />
+                <TextBlock Grid.Column="1" Text="分享链接" VerticalAlignment="Center" />
+                <Border Grid.Column="2" Style="{StaticResource NavBadge}"
+                        Visibility="{Binding ShareCount, Converter={StaticResource CountToVis}}">
+                  <TextBlock Text="{Binding ShareCount}" FontSize="10" Foreground="#B9B1FF" />
+                </Border>
+              </Grid>
+            </RadioButton>
+            <RadioButton Style="{StaticResource NavItem}" GroupName="Nav"
+                         IsChecked="{Binding IsSettingsPage, Mode=OneWay}"
+                         Command="{Binding NavigateCommand}" CommandParameter="settings">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="26" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE713;" FontSize="15"
+                           HorizontalAlignment="Left" />
+                <TextBlock Grid.Column="1" Text="设备与连接" VerticalAlignment="Center" />
+              </Grid>
+            </RadioButton>
+          </StackPanel>
+
+          <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Margin="14,0,14,14">
+            <Border Style="{StaticResource SoftCard}" Margin="0,0,0,10">
+              <StackPanel>
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="34" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Border Width="32" Height="32" CornerRadius="10" Background="{StaticResource AvatarGradient}">
+                    <TextBlock Text="{Binding AccountInitial}" Foreground="#0B0D14"
+                               FontWeight="Bold" FontSize="13" HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                  </Border>
+                  <StackPanel Grid.Column="1" Margin="10,1,0,0">
+                    <TextBlock Text="{Binding AccountLabel}" FontSize="12.5" FontWeight="SemiBold"
+                               TextTrimming="CharacterEllipsis" />
+                    <TextBlock Text="{Binding AccountSubLabel}" Style="{StaticResource CaptionText}"
+                               Margin="0,2,0,0" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                </Grid>
+                <Border Style="{StaticResource Divider}" Margin="0,11,0,10" />
+                <StackPanel Orientation="Horizontal">
+                  <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}"
+                           Margin="0,0,7,0" />
+                  <TextBlock Text="{Binding ServerStatus}" FontSize="10.5"
+                             Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,7,0,0">
+                  <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={StaticResource StringToBrush}}"
+                           Margin="0,0,7,0" />
+                  <TextBlock Text="{Binding LanStatus}" FontSize="10.5"
+                             Foreground="{StaticResource MutedBrush}" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+            <TextBlock Text="LUMEN 1.0 · NATIVE WPF" FontSize="8.5" Foreground="#4F5871"
+                       HorizontalAlignment="Center" />
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <Grid Grid.Column="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Margin="34,22,34,14">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+          </Grid.ColumnDefinitions>
+          <StackPanel>
+            <TextBlock Text="{Binding PageTitle}" Style="{StaticResource DisplayTitle}" />
+            <TextBlock Text="{Binding PageSubtitle}" Style="{StaticResource MutedText}"
+                       Margin="0,5,0,0" FontSize="12.5" />
+          </StackPanel>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+            <Border Style="{StaticResource StatusPill}" Margin="0,0,8,0">
+              <StackPanel Orientation="Horizontal">
+                <Ellipse Width="6" Height="6" Fill="{Binding LanStatusColor, Converter={StaticResource StringToBrush}}"
+                         Margin="0,0,7,0" />
+                <TextBlock Text="{Binding LanStatus}" FontSize="10.5" Foreground="{StaticResource MutedBrush}" />
+              </StackPanel>
+            </Border>
+            <Border Style="{StaticResource StatusPill}" Margin="0,0,8,0">
+              <StackPanel Orientation="Horizontal">
+                <Ellipse Width="6" Height="6" Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}"
+                         Margin="0,0,7,0" />
+                <TextBlock Text="{Binding ServerStatus}" FontSize="10.5" Foreground="{StaticResource MutedBrush}" />
+              </StackPanel>
+            </Border>
+            <Button Style="{StaticResource IconButton}" Content="&#xE72C;" ToolTip="刷新"
+                    Command="{Binding RefreshCommand}" />
+          </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Visibility="{Binding IsDevicesPage, Converter={StaticResource BoolToVis}}">
+          <StackPanel Margin="34,0,34,34">
+            <Border CornerRadius="22" Padding="28" Background="{StaticResource HeroGradient}"
+                    BorderBrush="#2E3550" BorderThickness="1">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="300" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                  <TextBlock Text="AUTO ROUTING" FontSize="9.5" FontWeight="Bold" Foreground="#8F86FF" />
+                  <TextBlock Text="文件，走最近的路。" Style="{StaticResource DisplayTitle}"
+                             FontSize="30" Margin="0,9,0,0" />
+                  <TextBlock Text="同一局域网优先直连；跨网络时自动切换到服务器中转。每一条路线、每一个分块都可追踪。"
+                             Style="{StaticResource MutedText}" MaxWidth="560" HorizontalAlignment="Left"
+                             Margin="0,9,0,0" FontSize="12.5" />
+                  <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <Border Style="{StaticResource Chip}" Margin="0,0,8,0">
+                      <TextBlock Text="局域网直连" FontSize="10.5" Foreground="#B8F2E8" />
+                    </Border>
+                    <Border Style="{StaticResource Chip}" Margin="0,0,8,0">
+                      <TextBlock Text="服务器中转" FontSize="10.5" Foreground="#D0CAFF" />
+                    </Border>
+                    <Border Style="{StaticResource Chip}">
+                      <TextBlock Text="IPv4 / IPv6" FontSize="10.5" Foreground="#C4CCE0" />
+                    </Border>
+                  </StackPanel>
+                </StackPanel>
+                <Border Grid.Column="1" Margin="24,0,0,0" CornerRadius="18" Background="#10141F"
+                        BorderBrush="#2B3450" BorderThickness="1" Padding="18">
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="Auto" />
+                      <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel>
+                        <TextBlock Text="在线设备" Style="{StaticResource MetricLabel}" />
+                        <TextBlock Text="{Binding OnlineDeviceCount}" Style="{StaticResource MetricValue}" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1">
+                        <TextBlock Text="局域网可见" Style="{StaticResource MetricLabel}" />
+                        <TextBlock Text="{Binding LanDeviceCount}" Style="{StaticResource MetricValue}" />
+                      </StackPanel>
+                    </Grid>
+                    <Border Grid.Row="1" Style="{StaticResource Divider}" />
+                    <Grid Grid.Row="1" Margin="0,18,0,0">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel>
+                        <TextBlock Text="中转在线" Style="{StaticResource MetricLabel}" />
+                        <TextBlock Text="{Binding RelayDeviceCount}" Style="{StaticResource MetricValue}" FontSize="21" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="1">
+                        <TextBlock Text="活跃传输" Style="{StaticResource MetricLabel}" />
+                        <TextBlock Text="{Binding ActiveTransferCount}" Style="{StaticResource MetricValue}" FontSize="21" />
+                      </StackPanel>
+                    </Grid>
+                  </Grid>
+                </Border>
+              </Grid>
+            </Border>
+
+            <Grid Margin="0,20,0,0">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Border Style="{StaticResource Card}" Padding="16" Margin="0,0,10,0">
+                <StackPanel>
+                  <TextBlock Text="直连服务" Style="{StaticResource MetricLabel}" />
+                  <TextBlock Text="{Binding DirectStatus}" FontSize="12" FontWeight="SemiBold"
+                             TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </Border>
+              <Border Grid.Column="1" Style="{StaticResource Card}" Padding="16" Margin="0,0,10,0">
+                <StackPanel>
+                  <TextBlock Text="本机 IPv4" Style="{StaticResource MetricLabel}" />
+                  <TextBlock Text="{Binding LocalIpv4}" FontSize="12" FontWeight="SemiBold"
+                             TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </Border>
+              <Border Grid.Column="2" Style="{StaticResource Card}" Padding="16" Margin="0,0,10,0">
+                <StackPanel>
+                  <TextBlock Text="本机 IPv6" Style="{StaticResource MetricLabel}" />
+                  <TextBlock Text="{Binding LocalIpv6}" FontSize="12" FontWeight="SemiBold"
+                             TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+              </Border>
+              <Border Grid.Column="3" Style="{StaticResource Card}" Padding="16">
+                <StackPanel>
+                  <TextBlock Text="服务器延迟" Style="{StaticResource MetricLabel}" />
+                  <TextBlock FontSize="12" FontWeight="SemiBold">
+                    <Run Text="{Binding LatencyMs, Mode=OneWay}" /><Run Text=" ms" />
+                  </TextBlock>
+                </StackPanel>
+              </Border>
+            </Grid>
+
+            <Grid Margin="0,27,0,13">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="可用设备" Style="{StaticResource SectionTitle}" />
+                <TextBlock Text="{Binding OnlineDeviceCount, StringFormat='{}{0} 台在线'}"
+                           Style="{StaticResource MutedText}" Margin="10,4,0,0" />
+              </StackPanel>
+              <Button Grid.Column="1" Style="{StaticResource GhostButton}" Command="{Binding RefreshCommand}">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE72C;" FontSize="13" />
+                  <TextBlock Text="刷新发现" Margin="7,0,0,0" />
+                </StackPanel>
+              </Button>
+            </Grid>
+
+            <ItemsControl ItemsSource="{Binding Devices}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <UniformGrid Columns="2" />
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Style="{StaticResource Card}" Margin="0,0,12,12" Padding="18">
+                    <Grid>
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                      </Grid.RowDefinitions>
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="48" />
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="46" Height="46" CornerRadius="15" Background="{StaticResource AvatarGradient}">
+                          <TextBlock Text="{Binding Initial}" Foreground="#0B0D14" FontSize="18"
+                                     FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,1,0,0">
+                          <TextBlock Text="{Binding Name}" Style="{StaticResource CardTitle}"
+                                     TextTrimming="CharacterEllipsis" />
+                          <TextBlock Text="{Binding ModelLabel}" Style="{StaticResource CaptionText}"
+                                     Margin="0,3,0,0" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                          <TextBlock Text="{Binding PlatformGlyph}" Style="{StaticResource IconGlyph}"
+                                     FontSize="18" Foreground="#73809E" HorizontalAlignment="Right" />
+                          <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                            <Ellipse Width="6" Height="6" Margin="0,0,5,0"
+                                     Fill="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                            <TextBlock Text="{Binding StatusLabel}" FontSize="9"
+                                       Foreground="{StaticResource MutedBrush}" />
+                          </StackPanel>
+                        </StackPanel>
+                      </Grid>
+                      <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,14,0,0">
+                        <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
+                          <TextBlock Text="{Binding PreferredRouteLabel}" FontSize="9.5" Foreground="#CDBFFF" />
+                        </Border>
+                        <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
+                          <TextBlock Text="{Binding IpFamilyLabel}" FontSize="9.5" Foreground="#AEB8CF" />
+                        </Border>
+                        <Border Style="{StaticResource Chip}">
+                          <TextBlock Text="{Binding LastSeenLabel}" FontSize="9.5" Foreground="#8F99B2" />
+                        </Border>
+                      </StackPanel>
+                      <TextBlock Grid.Row="2" Text="{Binding AddressSummary}" Style="{StaticResource CaptionText}"
+                                 FontFamily="{StaticResource MonoFont}" Margin="0,12,0,0"
+                                 TextTrimming="CharacterEllipsis" />
+                      <Grid Grid.Row="3" Margin="0,17,0,0">
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="Auto" />
+                          <ColumnDefinition Width="Auto" />
+                          <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding SourceLabel}" Style="{StaticResource CaptionText}"
+                                   VerticalAlignment="Center" />
+                        <Button Grid.Column="1" Style="{StaticResource GhostButton}" Margin="4,0,0,0"
+                                Command="{Binding DataContext.SendImageCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" ToolTip="发送图片" IsEnabled="{Binding CanSend}">
+                          <TextBlock Style="{StaticResource IconGlyph}" Text="&#xEB9F;" FontSize="13" />
+                        </Button>
+                        <Button Grid.Column="2" Style="{StaticResource GhostButton}" Margin="2,0,0,0"
+                                Command="{Binding DataContext.SendTextCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" ToolTip="发送文字" IsEnabled="{Binding CanSend}">
+                          <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8A5;" FontSize="13" />
+                        </Button>
+                        <Button Grid.Column="3" Style="{StaticResource PrimaryButton}"
+                                Padding="14,8" Margin="8,0,0,0" FontSize="11.5"
+                                Command="{Binding DataContext.SendFilesCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" IsEnabled="{Binding CanSend}">
+                          <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE898;" FontSize="12"
+                                       Foreground="#0B0D14" />
+                            <TextBlock Text="发送" Margin="6,0,0,0" Foreground="#0B0D14" FontWeight="SemiBold" />
+                          </StackPanel>
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Border Style="{StaticResource Card}" Visibility="{Binding HasNoDevices, Converter={StaticResource BoolToVis}}"
+                    Padding="34" Margin="0,0,0,12">
+              <StackPanel HorizontalAlignment="Center">
+                <Border Width="56" Height="56" CornerRadius="18" Background="#161C2E">
+                  <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE772;" FontSize="23"
+                             Foreground="#7E89A7" />
+                </Border>
+                <TextBlock Text="还没有发现设备" Style="{StaticResource SectionTitle}" Margin="0,15,0,0"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="在另一台设备打开 Lumen；同账号设备会自动上线，同一局域网内的设备也会自动发现。"
+                           Style="{StaticResource MutedText}" MaxWidth="430" TextAlignment="Center"
+                           Margin="0,7,0,0" />
+                <Button Style="{StaticResource SecondaryButton}" Content="刷新设备"
+                        Command="{Binding RefreshCommand}" HorizontalAlignment="Center" Margin="0,16,0,0" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1" Margin="34,0,34,26"
+              Visibility="{Binding IsTransfersPage, Converter={StaticResource BoolToVis}}">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <Grid Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
+              <RadioButton Style="{StaticResource FilterChip}" GroupName="TransferFilter" Content="全部"
+                           IsChecked="{Binding IsAllFilter, Mode=OneWay}"
+                           Command="{Binding SetFilterCommand}" CommandParameter="all" />
+              <RadioButton Style="{StaticResource FilterChip}" GroupName="TransferFilter" Content="发送"
+                           IsChecked="{Binding IsSentFilter, Mode=OneWay}"
+                           Command="{Binding SetFilterCommand}" CommandParameter="out" />
+              <RadioButton Style="{StaticResource FilterChip}" GroupName="TransferFilter" Content="接收"
+                           IsChecked="{Binding IsReceivedFilter, Mode=OneWay}"
+                           Command="{Binding SetFilterCommand}" CommandParameter="in" />
+              <RadioButton Style="{StaticResource FilterChip}" GroupName="TransferFilter" Content="局域网"
+                           IsChecked="{Binding IsLanFilter, Mode=OneWay}"
+                           Command="{Binding SetFilterCommand}" CommandParameter="lan" />
+              <RadioButton Style="{StaticResource FilterChip}" GroupName="TransferFilter" Content="服务器中转"
+                           IsChecked="{Binding IsRelayFilter, Mode=OneWay}"
+                           Command="{Binding SetFilterCommand}" CommandParameter="relay" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+              <TextBlock Text="{Binding TransferActivityLabel}" Style="{StaticResource CaptionText}"
+                         VerticalAlignment="Center" Margin="0,0,12,0" />
+              <Border Style="{StaticResource StatusPill}">
+                <TextBlock><Run Text="{Binding TransferCount, Mode=OneWay}" /><Run Text=" 条记录" /></TextBlock>
+              </Border>
+            </StackPanel>
+          </Grid>
+          <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+              <ItemsControl ItemsSource="{Binding TransfersView}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Button Style="{StaticResource TransferCardButton}"
+                            Command="{Binding DataContext.OpenTransferCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                            CommandParameter="{Binding}">
+                      <Grid>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="48" />
+                          <ColumnDefinition Width="1.7*" />
+                          <ColumnDefinition Width="1.2*" />
+                          <ColumnDefinition Width="1.35*" />
+                          <ColumnDefinition Width="114" />
+                          <ColumnDefinition Width="20" />
+                        </Grid.ColumnDefinitions>
+                        <Border Width="44" Height="44" CornerRadius="14" Background="#181F32" VerticalAlignment="Top">
+                          <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding KindGlyph}"
+                                     FontSize="18" Foreground="#A69CFF" />
+                        </Border>
+                        <StackPanel Grid.Column="1" Margin="12,0,12,0">
+                          <TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="SemiBold"
+                                     TextTrimming="CharacterEllipsis" />
+                          <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                            <TextBlock Text="{Binding DirectionLabel}" FontSize="10" Foreground="#8B95AE" />
+                            <TextBlock Text=" · " FontSize="10" Foreground="#4B5470" />
+                            <TextBlock Text="{Binding PeerLabel}" FontSize="10" Foreground="#8B95AE"
+                                       TextTrimming="CharacterEllipsis" MaxWidth="180" />
+                          </StackPanel>
+                          <TextBlock Text="{Binding TimeLabel}" Style="{StaticResource CaptionText}" Margin="0,5,0,0" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="0,2,12,0">
+                          <StackPanel Orientation="Horizontal">
+                            <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
+                              <TextBlock Text="{Binding RouteShortLabel}" FontSize="9" Foreground="#CFC4FF" />
+                            </Border>
+                            <Border Style="{StaticResource Chip}">
+                              <TextBlock Text="{Binding IpLabel}" FontSize="9" Foreground="#AAB4CC" />
+                            </Border>
+                          </StackPanel>
+                          <TextBlock Text="{Binding AddressLabel}" Style="{StaticResource CaptionText}"
+                                     Margin="0,8,0,0" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="3" Margin="0,2,16,0">
+                          <ProgressBar Style="{StaticResource ProgressTrack}" Height="5"
+                                       Value="{Binding ProgressPercent, Mode=OneWay}" Maximum="100" />
+                          <Grid Margin="0,7,0,0">
+                            <TextBlock Text="{Binding TransferredLabel}" FontSize="10" Foreground="#8C96AF" />
+                            <TextBlock Text="{Binding SpeedLabel}" FontSize="10" Foreground="#6F7A94"
+                                       HorizontalAlignment="Right" />
+                          </Grid>
+                          <TextBlock Text="{Binding ChunkLabel}" Style="{StaticResource CaptionText}"
+                                     Margin="0,5,0,0" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="4" VerticalAlignment="Center">
+                          <Border Style="{StaticResource StatusPill}" HorizontalAlignment="Left" Background="#151B2A">
+                            <StackPanel Orientation="Horizontal">
+                              <Ellipse Width="5" Height="5" Margin="0,0,6,0"
+                                       Fill="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                              <TextBlock Text="{Binding StatusLabel}" FontSize="9.5"
+                                         Foreground="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                            </StackPanel>
+                          </Border>
+                          <TextBlock Text="{Binding ProgressText}" FontSize="10" Foreground="#69738C"
+                                     Margin="0,7,0,0" />
+                        </StackPanel>
+                        <TextBlock Grid.Column="5" Style="{StaticResource IconGlyph}" Text="&#xE76C;"
+                                   FontSize="11" Foreground="#5D6782" />
+                      </Grid>
+                    </Button>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+              <Border Style="{StaticResource Card}" Padding="36" Margin="0,0,0,12"
+                      Visibility="{Binding HasNoTransfers, Converter={StaticResource BoolToVis}}">
+                <StackPanel HorizontalAlignment="Center">
+                  <Border Width="56" Height="56" CornerRadius="18" Background="#161C2E">
+                    <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE81C;" FontSize="23" Foreground="#7E89A7" />
+                  </Border>
+                  <TextBlock Text="还没有传输记录" Style="{StaticResource SectionTitle}" Margin="0,15,0,0"
+                             HorizontalAlignment="Center" />
+                  <TextBlock Text="从“附近设备”选择设备，发送文件、图片或文字。"
+                             Style="{StaticResource MutedText}" TextAlignment="Center" Margin="0,7,0,0" />
+                  <Button Style="{StaticResource SecondaryButton}" Content="去发送"
+                          Command="{Binding NavigateCommand}" CommandParameter="devices"
+                          HorizontalAlignment="Center" Margin="0,16,0,0" />
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </ScrollViewer>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Visibility="{Binding IsSharesPage, Converter={StaticResource BoolToVis}}">
+          <StackPanel Margin="34,0,34,34">
+            <Border CornerRadius="20" Padding="24" Background="#13182A"
+                    BorderBrush="#28314A" BorderThickness="1">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                  <TextBlock Text="PUBLIC LINKS" FontSize="9" FontWeight="Bold" Foreground="#8F86FF" />
+                  <TextBlock Text="把文件交给任何人，而不安装应用。" Style="{StaticResource SectionTitle}"
+                             FontSize="19" Margin="0,7,0,0" />
+                  <TextBlock Text="分享链接可设置有效期、访问密码和下载次数上限；到期后自动失效。"
+                             Style="{StaticResource MutedText}" Margin="0,5,0,0" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                  <Button Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"
+                          Command="{Binding CreateTextShareCommand}">
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE8A5;" FontSize="12" />
+                      <TextBlock Text="文字分享" Margin="7,0,0,0" />
+                    </StackPanel>
+                  </Button>
+                  <Button Style="{StaticResource PrimaryButton}" Command="{Binding CreateShareFileCommand}">
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE710;" FontSize="12"
+                                 Foreground="#0B0D14" />
+                      <TextBlock Text="分享文件" Margin="7,0,0,0" Foreground="#0B0D14" />
+                    </StackPanel>
+                  </Button>
+                </StackPanel>
+              </Grid>
+            </Border>
+            <Grid Margin="0,25,0,12">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <TextBlock Text="我的分享" Style="{StaticResource SectionTitle}" />
+              <Button Grid.Column="1" Style="{StaticResource GhostButton}"
+                      Command="{Binding RefreshSharesCommand}">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE72C;" FontSize="12" />
+                  <TextBlock Text="刷新" Margin="6,0,0,0" />
+                </StackPanel>
+              </Button>
+            </Grid>
+            <ItemsControl ItemsSource="{Binding Shares}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <Border Style="{StaticResource Card}" Margin="0,0,0,10" Padding="16">
+                    <Grid>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48" />
+                        <ColumnDefinition Width="1.7*" />
+                        <ColumnDefinition Width="1.2*" />
+                        <ColumnDefinition Width="1.1*" />
+                        <ColumnDefinition Width="Auto" />
+                      </Grid.ColumnDefinitions>
+                      <Border Width="44" Height="44" CornerRadius="14" Background="#181F32">
+                        <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding KindGlyph}"
+                                   FontSize="18" Foreground="#96E6DB" />
+                      </Border>
+                      <StackPanel Grid.Column="1" Margin="12,0,12,0">
+                        <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Url}" Style="{StaticResource CaptionText}"
+                                   FontFamily="{StaticResource MonoFont}" Margin="0,4,0,0"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding CreatedLabel}" Style="{StaticResource CaptionText}"
+                                   Margin="0,4,0,0" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2" Margin="0,2,12,0">
+                        <StackPanel Orientation="Horizontal">
+                          <Border Style="{StaticResource Chip}" Margin="0,0,6,0">
+                            <StackPanel Orientation="Horizontal">
+                              <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding ProtectionGlyph}"
+                                         FontSize="9" Foreground="#C8BFFF" />
+                              <TextBlock Text="{Binding ProtectionLabel}" FontSize="9" Margin="5,0,0,0"
+                                         Foreground="#C8BFFF" />
+                            </StackPanel>
+                          </Border>
+                          <Border Style="{StaticResource Chip}">
+                            <TextBlock Text="{Binding SizeLabel}" FontSize="9" Foreground="#AAB4CC" />
+                          </Border>
+                        </StackPanel>
+                        <TextBlock Text="{Binding DownloadLabel}" Style="{StaticResource CaptionText}"
+                                   Margin="0,8,0,0" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="3" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding StatusLabel}" FontSize="10.5" FontWeight="SemiBold"
+                                   Foreground="{Binding StatusColor, Converter={StaticResource StringToBrush}}" />
+                        <TextBlock Text="{Binding ExpiryLabel}" Style="{StaticResource CaptionText}" Margin="0,5,0,0" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource IconButton}" Content="&#xE8C8;" ToolTip="复制链接"
+                                Command="{Binding DataContext.CopyShareUrlCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                        <Button Style="{StaticResource IconButton}" Content="&#xE8A7;" ToolTip="打开链接"
+                                Command="{Binding DataContext.OpenShareUrlCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                        <Button Style="{StaticResource DangerGhostButton}" Content="撤销" FontSize="10.5"
+                                Padding="8,6"
+                                Command="{Binding DataContext.RevokeShareCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Border Style="{StaticResource Card}" Padding="36"
+                    Visibility="{Binding HasNoShares, Converter={StaticResource BoolToVis}}">
+              <StackPanel HorizontalAlignment="Center">
+                <Border Width="56" Height="56" CornerRadius="18" Background="#161C2E">
+                  <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE71B;" FontSize="23" Foreground="#7E89A7" />
+                </Border>
+                <TextBlock Text="还没有分享链接" Style="{StaticResource SectionTitle}" Margin="0,15,0,0"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="绑定服务器后，可以把任意文件或文字变成带密码保护的公开链接。"
+                           Style="{StaticResource MutedText}" TextAlignment="Center" Margin="0,7,0,0" />
+                <Button Style="{StaticResource SecondaryButton}" Content="去绑定服务器"
+                        Command="{Binding NavigateCommand}" CommandParameter="settings"
+                        HorizontalAlignment="Center" Margin="0,16,0,0" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      Visibility="{Binding IsSettingsPage, Converter={StaticResource BoolToVis}}">
+          <Grid Margin="34,0,34,34">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="1.15*" />
+              <ColumnDefinition Width="0.85*" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="0,0,14,0">
+              <Border Style="{StaticResource Card}" Padding="22">
+                <StackPanel>
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                      <TextBlock Text="服务器绑定" Style="{StaticResource SectionTitle}" />
+                      <TextBlock Text="同账号设备上线后自动出现在附近设备列表。" Style="{StaticResource CaptionText}"
+                                 Margin="0,4,0,0" />
+                    </StackPanel>
+                    <Border Grid.Column="1" Style="{StaticResource StatusPill}" VerticalAlignment="Top">
+                      <StackPanel Orientation="Horizontal">
+                        <Ellipse Width="5" Height="5" Margin="0,0,6,0"
+                                 Fill="{Binding ServerStatusColor, Converter={StaticResource StringToBrush}}" />
+                        <TextBlock Text="{Binding ServerStatus}" FontSize="9.5"
+                                   Foreground="{StaticResource MutedBrush}" />
+                      </StackPanel>
+                    </Border>
+                  </Grid>
+                  <StackPanel Visibility="{Binding IsLoggedIn, Converter={StaticResource InverseBoolToVis}}"
+                              Margin="0,20,0,0">
+                    <TextBlock Text="服务器地址" Style="{StaticResource FieldLabel}" />
+                    <TextBox Style="{StaticResource DarkTextBox}" Margin="0,0,0,13"
+                             Text="{Binding ServerUrl, UpdateSourceTrigger=PropertyChanged}" />
+                    <Grid Margin="0,0,0,13">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="12" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <StackPanel>
+                        <TextBlock Text="用户名" Style="{StaticResource FieldLabel}" />
+                        <TextBox Style="{StaticResource DarkTextBox}"
+                                 Text="{Binding UsernameInput, UpdateSourceTrigger=PropertyChanged}" />
+                      </StackPanel>
+                      <StackPanel Grid.Column="2">
+                        <TextBlock Text="显示名称" Style="{StaticResource FieldLabel}" />
+                        <TextBox Style="{StaticResource DarkTextBox}"
+                                 Text="{Binding DisplayNameInput, UpdateSourceTrigger=PropertyChanged}" />
+                      </StackPanel>
+                    </Grid>
+                    <TextBlock Text="密码" Style="{StaticResource FieldLabel}" />
+                    <PasswordBox Style="{StaticResource DarkPasswordBox}" Margin="0,0,0,15"
+                                 infra:PasswordBoxHelper.Monitor="True"
+                                 infra:PasswordBoxHelper.Password="{Binding PasswordInput, Mode=TwoWay}" />
+                    <StackPanel Orientation="Horizontal">
+                      <Button Style="{StaticResource PrimaryButton}" Content="登录并连接"
+                              Command="{Binding ConnectCommand}" IsEnabled="{Binding IsNotAuthenticating}" />
+                      <Button Style="{StaticResource SecondaryButton}" Content="创建账户"
+                              Command="{Binding RegisterCommand}" IsEnabled="{Binding IsNotAuthenticating}"
+                              Margin="9,0,0,0" />
+                      <TextBlock Text="正在连接…" Style="{StaticResource CaptionText}" VerticalAlignment="Center"
+                                 Margin="10,0,0,0"
+                                 Visibility="{Binding IsAuthenticating, Converter={StaticResource BoolToVis}}" />
+                    </StackPanel>
+                    <TextBlock Text="账户仅用于绑定设备和服务器中转；局域网直连不依赖服务器。"
+                               Style="{StaticResource FieldHint}" />
+                  </StackPanel>
+                  <Grid Visibility="{Binding IsLoggedIn, Converter={StaticResource BoolToVis}}"
+                        Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="44" />
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Border Width="40" Height="40" CornerRadius="13" Background="{StaticResource AvatarGradient}">
+                      <TextBlock Text="{Binding AccountInitial}" Foreground="#0B0D14" FontWeight="Bold"
+                                 HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="12,1,0,0">
+                      <TextBlock Text="{Binding AccountLabel}" FontSize="14" FontWeight="SemiBold" />
+                      <TextBlock Text="{Binding AccountSubLabel}" Style="{StaticResource CaptionText}" Margin="0,3,0,0" />
+                      <TextBlock Text="{Binding ServerUrlLabel}" Style="{StaticResource CaptionText}"
+                                 FontFamily="{StaticResource MonoFont}" Margin="0,5,0,0" />
+                    </StackPanel>
+                    <Button Grid.Column="2" Style="{StaticResource DangerGhostButton}" Content="退出账户"
+                            Command="{Binding LogoutCommand}" VerticalAlignment="Center" />
+                  </Grid>
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource Card}" Padding="22" Margin="0,14,0,0">
+                <StackPanel>
+                  <TextBlock Text="本机设置" Style="{StaticResource SectionTitle}" />
+                  <TextBlock Text="设备名会显示在对方的设备列表中。" Style="{StaticResource CaptionText}"
+                             Margin="0,4,0,0" />
+                  <TextBlock Text="设备名称" Style="{StaticResource FieldLabel}" Margin="0,17,0,7" />
+                  <TextBox Style="{StaticResource DarkTextBox}"
+                           Text="{Binding DeviceName, UpdateSourceTrigger=PropertyChanged}" />
+                  <TextBlock Text="接收目录" Style="{StaticResource FieldLabel}" Margin="0,14,0,7" />
+                  <Grid>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="*" />
+                      <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Style="{StaticResource DarkTextBox}" Margin="0,0,8,0"
+                             Text="{Binding ReceiveDirectory, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Grid.Column="1" Style="{StaticResource SecondaryButton}" Content="选择"
+                            Command="{Binding ChooseReceiveFolderCommand}" />
+                  </Grid>
+                  <TextBlock Text="分块大小" Style="{StaticResource FieldLabel}" Margin="0,14,0,7" />
+                  <ComboBox ItemsSource="{Binding ChunkOptions}" DisplayMemberPath="Label"
+                            SelectedItem="{Binding SelectedChunkSize}" />
+                  <TextBlock Text="{Binding ChunkDetailLabel}" Style="{StaticResource FieldHint}" />
+                  <StackPanel Orientation="Horizontal" Margin="0,17,0,0">
+                    <Button Style="{StaticResource PrimaryButton}" Content="保存设置"
+                            Command="{Binding SaveSettingsCommand}" />
+                    <Button Style="{StaticResource GhostButton}" Content="打开接收目录"
+                            Command="{Binding OpenFolderCommand}" Margin="6,0,0,0" />
+                  </StackPanel>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+              <Border Style="{StaticResource Card}" Padding="22">
+                <StackPanel>
+                  <Grid>
+                    <TextBlock Text="网络诊断" Style="{StaticResource SectionTitle}" />
+                    <Button Style="{StaticResource IconButton}" Content="&#xE72C;"
+                            HorizontalAlignment="Right" Command="{Binding RefreshCommand}" />
+                  </Grid>
+                  <Border Style="{StaticResource Divider}" Margin="0,14,0,12" />
+                  <Grid Margin="0,0,0,11">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="86" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="局域网发现" Style="{StaticResource CaptionText}" />
+                    <TextBlock Grid.Column="1" Text="{Binding DiscoveryStatus}" Style="{StaticResource DetailValue}"
+                               FontSize="11" TextAlignment="Right" />
+                  </Grid>
+                  <Grid Margin="0,0,0,11">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="86" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="直连监听" Style="{StaticResource CaptionText}" />
+                    <TextBlock Grid.Column="1" Text="{Binding DirectStatus}" Style="{StaticResource DetailValue}"
+                               FontSize="11" TextAlignment="Right" />
+                  </Grid>
+                  <Grid Margin="0,0,0,11">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="86" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="IPv4" Style="{StaticResource CaptionText}" />
+                    <TextBlock Grid.Column="1" Text="{Binding LocalIpv4}" Style="{StaticResource DetailValue}"
+                               FontFamily="{StaticResource MonoFont}" FontSize="10.5" TextAlignment="Right" />
+                  </Grid>
+                  <Grid Margin="0,0,0,11">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="86" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="IPv6" Style="{StaticResource CaptionText}" />
+                    <TextBlock Grid.Column="1" Text="{Binding LocalIpv6}" Style="{StaticResource DetailValue}"
+                               FontFamily="{StaticResource MonoFont}" FontSize="10.5" TextAlignment="Right" />
+                  </Grid>
+                  <Grid Margin="0,0,0,11">
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="86" />
+                      <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="设备 ID" Style="{StaticResource CaptionText}" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                      <TextBlock Text="{Binding DeviceIdShort}" Style="{StaticResource DetailValue}"
+                                 FontFamily="{StaticResource MonoFont}" FontSize="10.5" />
+                      <Button Style="{StaticResource IconButton}" Content="&#xE8C8;" Width="24" Height="24"
+                              Command="{Binding CopyDeviceIdCommand}" />
+                    </StackPanel>
+                  </Grid>
+                  <Border Style="{StaticResource Divider}" Margin="0,4,0,10" />
+                  <ItemsControl ItemsSource="{Binding LocalAddresses}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Grid Margin="0,0,0,6">
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                          </Grid.ColumnDefinitions>
+                          <Border Background="#182033" CornerRadius="6" Padding="4,2">
+                            <TextBlock Text="{Binding Family}" FontSize="8.5" Foreground="#8E9AB6" />
+                          </Border>
+                          <TextBlock Grid.Column="1" Text="{Binding Address}" FontFamily="{StaticResource MonoFont}"
+                                     FontSize="10.5" Foreground="#B9C2D7" Margin="8,0,8,0"
+                                     TextTrimming="CharacterEllipsis" />
+                          <TextBlock Grid.Column="2" Text="{Binding InterfaceName}" Style="{StaticResource CaptionText}"
+                                     MaxWidth="100" TextTrimming="CharacterEllipsis" />
+                        </Grid>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <Button Style="{StaticResource GhostButton}" Content="打开应用数据目录"
+                          Command="{Binding OpenDataFolderCommand}" HorizontalAlignment="Left" Margin="0,10,0,0" />
+                </StackPanel>
+              </Border>
+              <Border Style="{StaticResource Card}" Padding="22" Margin="0,14,0,0">
+                <StackPanel>
+                  <TextBlock Text="路线说明" Style="{StaticResource SectionTitle}" />
+                  <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+                    <Border Width="34" Height="34" CornerRadius="10" Background="#172521">
+                      <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE968;" FontSize="15"
+                                 Foreground="#71E5CE" />
+                    </Border>
+                    <StackPanel Margin="11,0,0,0">
+                      <TextBlock Text="局域网直连" FontWeight="SemiBold" FontSize="12" />
+                      <TextBlock Text="同一网络内直接传输，不经过服务器，速度取决于 Wi-Fi / 网线。"
+                                 Style="{StaticResource CaptionText}" Margin="0,3,0,0" MaxWidth="260" />
+                    </StackPanel>
+                  </StackPanel>
+                  <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                    <Border Width="34" Height="34" CornerRadius="10" Background="#201E32">
+                      <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE753;" FontSize="15"
+                                 Foreground="#B5A9FF" />
+                    </Border>
+                    <StackPanel Margin="11,0,0,0">
+                      <TextBlock Text="服务器中转" FontWeight="SemiBold" FontSize="12" />
+                      <TextBlock Text="跨网络时通过 Docker 服务端暂存并转发；支持 IPv4、IPv6 和服务端反代。"
+                                 Style="{StaticResource CaptionText}" Margin="0,3,0,0" MaxWidth="260" />
+                    </StackPanel>
+                  </StackPanel>
+                  <Border Style="{StaticResource SoftCard}" Margin="0,18,0,0">
+                    <TextBlock Text="安全提示：局域网直连需要双方确认；服务器中转内容会在磁盘暂存，默认 14 天后清理。公开分享请使用密码和较短有效期。"
+                               Style="{StaticResource FieldHint}" FontSize="10.5" Margin="0" />
+                  </Border>
+                </StackPanel>
+              </Border>
+            </StackPanel>
+          </Grid>
+        </ScrollViewer>
+      </Grid>
+    </Grid>
+
+    <Grid Grid.RowSpan="2" Panel.ZIndex="80" Background="#B3050710"
+          Visibility="{Binding IsInviteOpen, Converter={StaticResource BoolToVis}}">
+      <Border Width="500" CornerRadius="24" Background="#121725" BorderBrush="#2B344F"
+              BorderThickness="1" Padding="28" HorizontalAlignment="Center" VerticalAlignment="Center"
+              Effect="{StaticResource CardShadow}">
+        <StackPanel>
+          <StackPanel Orientation="Horizontal">
+            <Border Width="54" Height="54" CornerRadius="17" Background="{StaticResource AvatarGradient}">
+              <TextBlock Text="{Binding PendingInvite.PeerInitial}" Foreground="#0B0D14" FontSize="21"
+                         FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <StackPanel Margin="14,3,0,0">
+              <TextBlock Text="{Binding PendingInvite.PeerName}" Style="{StaticResource SectionTitle}" FontSize="18" />
+              <TextBlock Text="想向你发送" Style="{StaticResource MutedText}" Margin="0,3,0,0" />
+            </StackPanel>
+          </StackPanel>
+          <Border Style="{StaticResource SoftCard}" Margin="0,22,0,0" Padding="16">
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="46" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+              </Grid.ColumnDefinitions>
+              <Border Width="42" Height="42" CornerRadius="13" Background="#1D2638">
+                <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding PendingInvite.KindGlyph}"
+                           FontSize="18" Foreground="#B3A8FF" />
+              </Border>
+              <StackPanel Grid.Column="1" Margin="11,0,10,0">
+                <TextBlock Text="{Binding PendingInvite.Name}" FontSize="13" FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding PendingInvite.SizeLabel}" Style="{StaticResource CaptionText}"
+                           Margin="0,4,0,0" />
+              </StackPanel>
+              <Border Grid.Column="2" Style="{StaticResource Chip}" VerticalAlignment="Center">
+                <TextBlock Text="{Binding PendingInvite.RouteShortLabel}" FontSize="9" Foreground="#C9C0FF" />
+              </Border>
+            </Grid>
+          </Border>
+          <TextBlock Text="{Binding PendingInvite.ConnectionDetail}" Style="{StaticResource CaptionText}"
+                     Margin="0,12,0,0" />
+          <Grid Margin="0,22,0,0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Style="{StaticResource SecondaryButton}" Content="拒绝" Height="42" Margin="0,0,6,0"
+                    Command="{Binding DeclineInviteCommand}" />
+            <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="接受传输" Height="42"
+                    Margin="6,0,0,0" Command="{Binding AcceptInviteCommand}" />
+          </Grid>
+          <TextBlock Text="接受后才会开始接收内容 · 邀请 2 分钟内有效" Style="{StaticResource CaptionText}"
+                     HorizontalAlignment="Center" Margin="0,13,0,0" />
+        </StackPanel>
+      </Border>
+    </Grid>
+
+    <Grid Grid.RowSpan="2" Panel.ZIndex="82" Background="#B3050710"
+          Visibility="{Binding IsComposeOpen, Converter={StaticResource BoolToVis}}">
+      <Border Width="560" CornerRadius="24" Background="#121725" BorderBrush="#2B344F"
+              BorderThickness="1" Padding="26" HorizontalAlignment="Center" VerticalAlignment="Center"
+              Effect="{StaticResource CardShadow}">
+        <StackPanel>
+          <Grid>
+            <StackPanel>
+              <TextBlock Text="发送文字" Style="{StaticResource SectionTitle}" />
+              <TextBlock Text="{Binding ComposeTargetLabel, StringFormat='发送到 {0}'}"
+                         Style="{StaticResource MutedText}" Margin="0,4,0,0" />
+            </StackPanel>
+            <Button Style="{StaticResource IconButton}" Content="&#xE8BB;"
+                    Command="{Binding CloseComposeCommand}" HorizontalAlignment="Right" />
+          </Grid>
+          <TextBox Style="{StaticResource DarkTextBox}" Margin="0,20,0,8"
+                   Text="{Binding ComposeText, UpdateSourceTrigger=PropertyChanged}"
+                   AcceptsReturn="True" TextWrapping="Wrap" Height="190"
+                   VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" />
+          <Grid>
+            <TextBlock Text="{Binding ComposeLengthLabel}" Style="{StaticResource CaptionText}" />
+            <Button Style="{StaticResource GhostButton}" Content="从剪贴板粘贴"
+                    Command="{Binding PasteClipboardCommand}" HorizontalAlignment="Right" />
+          </Grid>
+          <Grid Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Style="{StaticResource SecondaryButton}" Content="取消" Height="40" Margin="0,0,6,0"
+                    Command="{Binding CloseComposeCommand}" />
+            <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Content="发送" Height="40"
+                    Margin="6,0,0,0" Command="{Binding ConfirmComposeCommand}" />
+          </Grid>
+        </StackPanel>
+      </Border>
+    </Grid>
+
+    <Grid Grid.RowSpan="2" Panel.ZIndex="84" Background="#B3050710"
+          Visibility="{Binding IsShareDialogOpen, Converter={StaticResource BoolToVis}}">
+      <Border Width="560" CornerRadius="24" Background="#121725" BorderBrush="#2B344F"
+              BorderThickness="1" Padding="26" HorizontalAlignment="Center" VerticalAlignment="Center"
+              Effect="{StaticResource CardShadow}">
+        <Grid>
+          <StackPanel Visibility="{Binding HasCreatedShare, Converter={StaticResource InverseBoolToVis}}">
+            <Grid>
+              <StackPanel>
+                <TextBlock Text="{Binding ShareDialogTitle}" Style="{StaticResource SectionTitle}" />
+                <TextBlock Text="链接可在浏览器中直接访问，无需安装 Lumen。" Style="{StaticResource MutedText}"
+                           Margin="0,4,0,0" />
+              </StackPanel>
+              <Button Style="{StaticResource IconButton}" Content="&#xE8BB;"
+                      Command="{Binding CloseShareDialogCommand}" HorizontalAlignment="Right" />
+            </Grid>
+            <Border Style="{StaticResource SoftCard}" Margin="0,18,0,14" Padding="14">
+              <StackPanel>
+                <TextBlock Text="分享内容" Style="{StaticResource FieldLabel}" />
+                <TextBlock Text="{Binding ShareTargetLabel}" Style="{StaticResource CaptionText}"
+                           FontFamily="{StaticResource MonoFont}" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <TextBlock Text="名称" Style="{StaticResource FieldLabel}" />
+            <TextBox Style="{StaticResource DarkTextBox}" Margin="0,0,0,13"
+                     Text="{Binding ShareName, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel Visibility="{Binding ShareIsText, Converter={StaticResource BoolToVis}}">
+              <TextBlock Text="分享文字" Style="{StaticResource FieldLabel}" />
+              <TextBox Style="{StaticResource DarkTextBox}" Margin="0,0,0,13" Height="120"
+                       Text="{Binding ShareText, UpdateSourceTrigger=PropertyChanged}"
+                       AcceptsReturn="True" TextWrapping="Wrap"
+                       VerticalScrollBarVisibility="Auto" VerticalContentAlignment="Top" />
+            </StackPanel>
+            <Grid Margin="0,0,0,13">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <StackPanel>
+                <TextBlock Text="有效期（小时）" Style="{StaticResource FieldLabel}" />
+                <TextBox Style="{StaticResource DarkTextBox}"
+                         Text="{Binding ShareExpiryHours, UpdateSourceTrigger=PropertyChanged}" />
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="下载次数上限（0 为不限）" Style="{StaticResource FieldLabel}" />
+                <TextBox Style="{StaticResource DarkTextBox}"
+                         Text="{Binding ShareMaxDownloads, UpdateSourceTrigger=PropertyChanged}" />
+              </StackPanel>
+            </Grid>
+            <TextBlock Text="访问密码（可选）" Style="{StaticResource FieldLabel}" />
+            <PasswordBox Style="{StaticResource DarkPasswordBox}"
+                         infra:PasswordBoxHelper.Monitor="True"
+                         infra:PasswordBoxHelper.Password="{Binding SharePassword, Mode=TwoWay}" />
+            <TextBlock Text="分享内容会保存到服务器；到期后链接失效。密码至少 4 位。"
+                       Style="{StaticResource FieldHint}" />
+            <Grid Margin="0,20,0,0">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Button Style="{StaticResource SecondaryButton}" Content="取消" Height="40" Margin="0,0,6,0"
+                      Command="{Binding CloseShareDialogCommand}" />
+              <Button Grid.Column="1" Style="{StaticResource PrimaryButton}" Height="40" Margin="6,0,0,0"
+                      Command="{Binding ConfirmShareCommand}" IsEnabled="{Binding IsNotCreatingShare}">
+                <TextBlock Text="创建分享链接" Foreground="#0B0D14" />
+              </Button>
+            </Grid>
+          </StackPanel>
+          <StackPanel Visibility="{Binding HasCreatedShare, Converter={StaticResource BoolToVis}}">
+            <StackPanel HorizontalAlignment="Center">
+              <Border Width="62" Height="62" CornerRadius="20" Background="#182B28">
+                <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE73E;" FontSize="25"
+                           Foreground="#64E0C8" />
+              </Border>
+              <TextBlock Text="分享链接已创建" Style="{StaticResource SectionTitle}" FontSize="20"
+                         Margin="0,14,0,0" HorizontalAlignment="Center" />
+              <TextBlock Text="链接已自动复制到剪贴板。" Style="{StaticResource MutedText}"
+                         Margin="0,5,0,0" HorizontalAlignment="Center" />
+            </StackPanel>
+            <Border Style="{StaticResource SoftCard}" Margin="0,20,0,0">
+              <TextBox Text="{Binding CreatedShare.Url, Mode=OneWay}" IsReadOnly="True"
+                       Background="Transparent" BorderThickness="0" Foreground="#D6DAE9"
+                       FontFamily="{StaticResource MonoFont}" FontSize="11" TextWrapping="Wrap"
+                       Padding="0" />
+            </Border>
+            <Grid Margin="0,16,0,0">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+              </Grid.ColumnDefinitions>
+              <Button Style="{StaticResource SecondaryButton}" Content="复制链接" Height="40" Margin="0,0,5,0"
+                      Command="{Binding CopyCreatedShareCommand}" />
+              <Button Grid.Column="1" Style="{StaticResource GhostButton}" Content="打开网页" Height="40"
+                      Margin="5,0,5,0" Command="{Binding OpenShareUrlCommand}"
+                      CommandParameter="{Binding CreatedShare}" />
+              <Button Grid.Column="2" Style="{StaticResource PrimaryButton}" Content="完成" Height="40"
+                      Margin="5,0,0,0" Command="{Binding CloseShareDialogCommand}" />
+            </Grid>
+          </StackPanel>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <Grid Grid.RowSpan="2" Panel.ZIndex="86" Background="#7A02040A"
+          Visibility="{Binding IsDetailOpen, Converter={StaticResource BoolToVis}}">
+      <Border Width="550" HorizontalAlignment="Right" Background="#0F1320"
+              BorderBrush="#2A3248" BorderThickness="1,0,0,0" Effect="{StaticResource CardShadow}">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <Grid Margin="24,20,20,16">
+            <StackPanel>
+              <TextBlock Text="传输详情" Style="{StaticResource SectionTitle}" FontSize="18" />
+              <TextBlock Text="{Binding SelectedTransfer.FullTimeLabel}" Style="{StaticResource CaptionText}"
+                         Margin="0,4,0,0" />
+            </StackPanel>
+            <Button Style="{StaticResource IconButton}" Content="&#xE8BB;"
+                    Command="{Binding CloseDetailCommand}" HorizontalAlignment="Right" />
+          </Grid>
+          <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="24,0,24,20">
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="56" />
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Border Width="52" Height="52" CornerRadius="16" Background="#1B2236">
+                  <TextBlock Style="{StaticResource IconGlyph}" Text="{Binding SelectedTransfer.KindGlyph}"
+                             FontSize="21" Foreground="#B4A9FF" />
+                </Border>
+                <StackPanel Grid.Column="1" Margin="12,1,10,0">
+                  <TextBlock Text="{Binding SelectedTransfer.Name}" FontSize="14.5" FontWeight="SemiBold"
+                             TextWrapping="Wrap" />
+                  <TextBlock Text="{Binding SelectedTransfer.PeerLabel, StringFormat='与 {0}'}"
+                             Style="{StaticResource CaptionText}" Margin="0,4,0,0" />
+                </StackPanel>
+                <Border Grid.Column="2" Style="{StaticResource StatusPill}" VerticalAlignment="Top">
+                  <StackPanel Orientation="Horizontal">
+                    <Ellipse Width="5" Height="5" Margin="0,0,6,0"
+                             Fill="{Binding SelectedTransfer.StatusColor, Converter={StaticResource StringToBrush}}" />
+                    <TextBlock Text="{Binding SelectedTransfer.StatusLabel}" FontSize="9.5"
+                               Foreground="{Binding SelectedTransfer.StatusColor, Converter={StaticResource StringToBrush}}" />
+                  </StackPanel>
+                </Border>
+              </Grid>
+              <Image Source="{Binding SelectedTransfer.LocalPath, Converter={StaticResource PathToImage}}"
+                     MaxHeight="280" Stretch="Uniform" Margin="0,18,0,0"
+                     Visibility="{Binding SelectedTransfer.IsImage, Converter={StaticResource BoolToVis}}" />
+              <Border Style="{StaticResource SoftCard}" Margin="0,18,0,0">
+                <StackPanel>
+                  <Grid>
+                    <TextBlock Text="{Binding SelectedTransfer.TransferredLabel}" FontSize="10.5"
+                               Foreground="{StaticResource MutedBrush}" />
+                    <TextBlock Text="{Binding SelectedTransfer.ProgressText}" FontSize="10.5"
+                               Foreground="{StaticResource TealBrush}" HorizontalAlignment="Right" />
+                  </Grid>
+                  <ProgressBar Style="{StaticResource ProgressTrack}" Margin="0,9,0,0" Height="6"
+                               Value="{Binding SelectedTransfer.ProgressPercent, Mode=OneWay}" Maximum="100" />
+                  <Grid Margin="0,9,0,0">
+                    <TextBlock Text="{Binding SelectedTransfer.SpeedLabel}" Style="{StaticResource CaptionText}" />
+                    <TextBlock Text="{Binding SelectedTransfer.ChunkLabel}" Style="{StaticResource CaptionText}"
+                               HorizontalAlignment="Right" />
+                  </Grid>
+                </StackPanel>
+              </Border>
+              <TextBlock Text="连接与协议" Style="{StaticResource FieldLabel}" Margin="0,20,0,8" />
+              <Grid>
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition Width="*" />
+                  <ColumnDefinition Width="12" />
+                  <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border Style="{StaticResource SoftCard}">
+                  <StackPanel>
+                    <TextBlock Text="传输路线" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.RouteLabel}" Style="{StaticResource DetailValue}"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding SelectedTransfer.AddressLabel}" Style="{StaticResource CaptionText}"
+                               Margin="0,4,0,0" />
+                  </StackPanel>
+                </Border>
+                <Border Grid.Column="2" Style="{StaticResource SoftCard}">
+                  <StackPanel>
+                    <TextBlock Text="地址族" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.IpLabel}" Style="{StaticResource DetailValue}"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding SelectedTransfer.DirectionLabel}" Style="{StaticResource CaptionText}"
+                               Margin="0,4,0,0" />
+                  </StackPanel>
+                </Border>
+              </Grid>
+              <TextBlock Text="传输参数" Style="{StaticResource FieldLabel}" Margin="0,20,0,8" />
+              <Border Style="{StaticResource SoftCard}">
+                <Grid>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                  </Grid.RowDefinitions>
+                  <StackPanel Margin="0,0,0,12">
+                    <TextBlock Text="文件大小" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.SizeLabel}" Style="{StaticResource DetailValue}" />
+                  </StackPanel>
+                  <StackPanel Grid.Column="1" Margin="0,0,0,12">
+                    <TextBlock Text="分块大小" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.ChunkLabel}" Style="{StaticResource DetailValue}" />
+                  </StackPanel>
+                  <StackPanel Grid.Row="1" Margin="0,0,0,12">
+                    <TextBlock Text="完成分块" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Style="{StaticResource DetailValue}">
+                      <Run Text="{Binding SelectedTransfer.CompletedChunks, Mode=OneWay}" /><Run Text=" / " />
+                      <Run Text="{Binding SelectedTransfer.TotalChunks, Mode=OneWay}" />
+                    </TextBlock>
+                  </StackPanel>
+                  <StackPanel Grid.Row="1" Grid.Column="1" Margin="0,0,0,12">
+                    <TextBlock Text="当前速度" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.SpeedLabel}" Style="{StaticResource DetailValue}" />
+                  </StackPanel>
+                  <StackPanel Grid.Row="2" Margin="0,0,0,12">
+                    <TextBlock Text="开始时间" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.FullTimeLabel}" Style="{StaticResource DetailValue}" />
+                  </StackPanel>
+                  <StackPanel Grid.Row="2" Grid.Column="1" Margin="0,0,0,12">
+                    <TextBlock Text="完成时间" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.CompletedTimeLabel}" Style="{StaticResource DetailValue}" />
+                  </StackPanel>
+                  <StackPanel Grid.Row="3">
+                    <TextBlock Text="最近更新" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.UpdatedTimeLabel}" Style="{StaticResource DetailValue}"
+                               FontSize="10.5" />
+                  </StackPanel>
+                  <StackPanel Grid.Row="3" Grid.Column="1">
+                    <TextBlock Text="SHA-256" Style="{StaticResource MetricLabel}" />
+                    <TextBlock Text="{Binding SelectedTransfer.HashShort}" Style="{StaticResource DetailValue}"
+                               FontFamily="{StaticResource MonoFont}" FontSize="10" />
+                  </StackPanel>
+                </Grid>
+              </Border>
+              <TextBlock Text="本地保存" Style="{StaticResource FieldLabel}" Margin="0,20,0,8" />
+              <TextBlock Text="{Binding SelectedTransfer.LocalPathLabel}" Style="{StaticResource CaptionText}"
+                         FontFamily="{StaticResource MonoFont}" TextWrapping="Wrap" />
+              <StackPanel Visibility="{Binding SelectedTransfer.IsText, Converter={StaticResource BoolToVis}}"
+                          Margin="0,18,0,0">
+                <TextBlock Text="文字内容" Style="{StaticResource FieldLabel}" />
+                <Border Style="{StaticResource SoftCard}" MaxHeight="220">
+                  <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <TextBlock Text="{Binding SelectedTransfer.TextContent}" TextWrapping="Wrap"
+                               FontFamily="{StaticResource MonoFont}" FontSize="11" />
+                  </ScrollViewer>
+                </Border>
+              </StackPanel>
+              <TextBlock Text="{Binding SelectedTransfer.ErrorLabel}" Foreground="{StaticResource DangerBrush}"
+                         FontSize="11" TextWrapping="Wrap" Margin="0,14,0,0"
+                         Visibility="{Binding SelectedTransfer.ErrorLabel, Converter={StaticResource EmptyStringToVis}}" />
+              <Grid Margin="0,22,0,9">
+                <TextBlock Text="事件时间线" Style="{StaticResource SectionTitle}" FontSize="14" />
+                <TextBlock Text="{Binding SelectedTransfer.EventCount, StringFormat='{}{0} 个事件'}"
+                           Style="{StaticResource CaptionText}" HorizontalAlignment="Right" VerticalAlignment="Center" />
+              </Grid>
+              <ItemsControl ItemsSource="{Binding SelectedTransfer.Events}">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Grid Margin="0,0,0,10">
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="16" />
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <Grid>
+                        <Border Width="7" Height="7" CornerRadius="4" Background="#6C5FE0"
+                                VerticalAlignment="Top" Margin="0,5,0,0" />
+                        <Border Width="1" Background="#252D42" VerticalAlignment="Stretch" Margin="3,14,0,0" />
+                      </Grid>
+                      <StackPanel Grid.Column="1" Margin="7,0,0,0">
+                        <Grid>
+                          <TextBlock Text="{Binding TypeLabel}" FontSize="11" FontWeight="SemiBold"
+                                     Foreground="#C8CFDF" />
+                          <TextBlock Text="{Binding TimeLabel}" Style="{StaticResource CaptionText}"
+                                     HorizontalAlignment="Right" />
+                        </Grid>
+                        <TextBlock Text="{Binding Detail}" Style="{StaticResource CaptionText}" Margin="0,3,0,0" />
+                      </StackPanel>
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+            </StackPanel>
+          </ScrollViewer>
+          <Border Grid.Row="2" Background="#0E121D" BorderBrush="#232B3F" BorderThickness="0,1,0,0"
+                  Padding="24,14">
+            <StackPanel Orientation="Horizontal">
+              <Button Style="{StaticResource PrimaryButton}" Content="打开文件" Margin="0,0,7,0"
+                      Command="{Binding OpenFileCommand}" CommandParameter="{Binding SelectedTransfer}"
+                      IsEnabled="{Binding SelectedTransfer.CanOpen}" />
+              <Button Style="{StaticResource SecondaryButton}" Content="打开位置"
+                      Command="{Binding OpenFolderCommand}" CommandParameter="{Binding SelectedTransfer}" />
+              <Button Style="{StaticResource GhostButton}" Content="创建分享" Margin="7,0,0,0"
+                      Command="{Binding ShareTransferCommand}" CommandParameter="{Binding SelectedTransfer}"
+                      IsEnabled="{Binding SelectedTransfer.CanShare}" />
+              <Button Style="{StaticResource DangerGhostButton}" Content="取消传输"
+                      Command="{Binding CancelTransferCommand}" CommandParameter="{Binding SelectedTransfer}"
+                      IsEnabled="{Binding SelectedTransfer.CanCancel}" />
+            </StackPanel>
+          </Border>
+        </Grid>
+      </Border>
+    </Grid>
+
+    <Border Grid.RowSpan="2" Panel.ZIndex="200" HorizontalAlignment="Center" VerticalAlignment="Bottom"
+            Margin="0,0,0,26" Background="#E61B2132" BorderBrush="#343E59" BorderThickness="1"
+            CornerRadius="12" Padding="18,11"
+            Visibility="{Binding ToastVisible, Converter={StaticResource BoolToVis}}">
+      <StackPanel Orientation="Horizontal">
+        <Ellipse Width="6" Height="6" Margin="0,0,9,0"
+                 Fill="{Binding ToastColor, Converter={StaticResource StringToBrush}}" />
+        <TextBlock Text="{Binding ToastMessage}" FontSize="11.5" MaxWidth="560" TextWrapping="Wrap"
+                   Foreground="{Binding ToastColor, Converter={StaticResource StringToBrush}}" />
+      </StackPanel>
+    </Border>
+  </Grid>
+</Window>

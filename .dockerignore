@@ -1,0 +1,11 @@
+**/bin
+**/obj
+**/build
+**/.gradle
+data
+publish
+artifacts
+.git
+.idea
+.vs
+android

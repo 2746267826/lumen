@@ -1,0 +1,14 @@
+# Caddy obtains and renews HTTPS automatically. WebSocket upgrades and large
+# request bodies pass through without extra configuration.
+lumen.example.com {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:8080 {
+        transport http {
+            read_timeout 0
+            write_timeout 0
+        }
+    }
+    request_body {
+        max_size 220GB
+    }
+}

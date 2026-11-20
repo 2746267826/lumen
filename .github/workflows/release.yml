@@ -1,0 +1,167 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing tag to release, for example v1.0.0
+        required: true
+        type: string
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows package
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Resolve version
+        id: version
+        shell: pwsh
+        run: |
+          $tag = "${{ inputs.tag || github.ref_name }}"
+          $version = $tag -replace '^v', ''
+          "value=$version" >> $env:GITHUB_OUTPUT
+      - name: Publish self-contained executable
+        run: |
+          dotnet publish src/Lumen.Windows/Lumen.Windows.csproj `
+            -c Release -r win-x64 --self-contained true `
+            -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:Version=${{ steps.version.outputs.value }} `
+            -o dist/windows
+      - name: Zip Windows package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Compress-Archive -Path dist/windows/* `
+            -DestinationPath "dist/Lumen-Windows-x64-${{ steps.version.outputs.value }}.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-dist
+          path: dist/Lumen-Windows-x64-*.zip
+          if-no-files-found: error
+
+  android:
+    name: Android package
+    runs-on: ubuntu-latest
+    env:
+      ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+      - name: Install SDK platform
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Resolve version
+        id: version
+        run: |
+          tag="${{ inputs.tag || github.ref_name }}"
+          echo "value=${tag#v}" >> "$GITHUB_OUTPUT"
+      - name: Configure optional signing
+        id: signing
+        run: |
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$GITHUB_WORKSPACE/android-release.keystore"
+            printf 'storeFile=%s\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n' \
+              "$GITHUB_WORKSPACE/android-release.keystore" \
+              "$ANDROID_KEYSTORE_PASSWORD" \
+              "$ANDROID_KEY_ALIAS" \
+              "$ANDROID_KEY_PASSWORD" > src/Lumen.Android/keystore.properties
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build APKs
+        working-directory: src/Lumen.Android
+        run: |
+          ./gradlew :app:assembleDebug :app:assembleRelease --no-daemon --stacktrace \
+            -PlumenVersion=${{ steps.version.outputs.value }} \
+            -PlumenVersionCode=${{ github.run_number }}
+      - name: Collect release assets
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          SIGNED: ${{ steps.signing.outputs.enabled }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp src/Lumen.Android/app/build/outputs/apk/debug/app-debug.apk \
+            dist/Lumen-Android-debug.apk
+          if [ "$SIGNED" = "true" ] && [ -f src/Lumen.Android/app/build/outputs/apk/release/app-release.apk ]; then
+            cp src/Lumen.Android/app/build/outputs/apk/release/app-release.apk \
+              "dist/Lumen-Android-${VERSION}.apk"
+          elif [ -f src/Lumen.Android/app/build/outputs/apk/release/app-release-unsigned.apk ]; then
+            cp src/Lumen.Android/app/build/outputs/apk/release/app-release-unsigned.apk \
+              "dist/Lumen-Android-${VERSION}-unsigned.apk"
+          fi
+          ls -lh dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-dist
+          path: dist/*
+          if-no-files-found: error
+
+  github-release:
+    name: Publish GitHub Release
+    needs: [windows, android]
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum * > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Lumen ${{ env.RELEASE_TAG }}
+          generate_release_notes: true
+          prerelease: ${{ contains(env.RELEASE_TAG, '-') }}
+          body: |
+            ## 下载
+
+            - **Windows x64**：解压 `Lumen-Windows-x64-*.zip`，运行 `Lumen.Windows.exe`
+            - **Android**：`Lumen-Android-debug.apk` 可直接安装；生产签名包需配置 Android 签名 Secrets
+
+            ## Docker
+
+            镜像同时推送到 GHCR：
+
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}:latest
+            ```
+
+            详细部署说明见仓库 README。
+          files: dist/*
+          fail_on_unmatched_files: true

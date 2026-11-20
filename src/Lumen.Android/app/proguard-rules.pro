@@ -1,0 +1,4 @@
+-keepattributes *Annotation*
+-keep class dev.lumen.app.data.** { *; }
+-dontwarn okhttp3.**
+-dontwarn org.nanohttpd.**

@@ -1,0 +1,32 @@
+# .NET
+**/bin/
+**/obj/
+*.user
+
+# Android
+**/.gradle/
+**/local.properties
+**/build/
+*.apk
+*.aab
+*.keystore
+*.jks
+keystore.properties
+
+# Runtime data
+data/
+*.db
+*.db-shm
+*.db-wal
+.env
+
+# IDE / OS
+.idea/
+.vs/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local publish output
+publish/
+artifacts/
