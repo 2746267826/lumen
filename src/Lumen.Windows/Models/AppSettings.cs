@@ -11,6 +11,7 @@ public sealed class AppSettings
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
         "Lumen");
     public int ChunkSize { get; set; } = 1024 * 1024;
+    public string ThemeMode { get; set; } = "system";
     public Guid? UserId { get; set; }
     public string? Username { get; set; }
     public string? DisplayName { get; set; }

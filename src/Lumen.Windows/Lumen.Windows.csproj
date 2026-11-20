@@ -10,12 +10,26 @@
     <RootNamespace>Lumen.Windows</RootNamespace>
     <AssemblyName>Lumen.Windows</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\lumen.ico</ApplicationIcon>
+    <AssemblyTitle>Lumen 流明互传</AssemblyTitle>
+    <Product>Lumen 流明互传</Product>
+    <Company>Lumen</Company>
+    <Description>局域网优先的跨设备互传</Description>
     <SatelliteResourceLanguages>zh-Hans;en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\lumen.ico" />
   </ItemGroup>
 
   <ItemGroup>

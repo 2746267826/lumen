@@ -35,24 +35,35 @@ jobs:
           $tag = "${{ inputs.tag || github.ref_name }}"
           $version = $tag -replace '^v', ''
           "value=$version" >> $env:GITHUB_OUTPUT
-      - name: Publish self-contained executable
+      - name: Publish Windows packages
         run: |
           dotnet publish src/Lumen.Windows/Lumen.Windows.csproj `
             -c Release -r win-x64 --self-contained true `
             -p:PublishSingleFile=true `
             -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:DebugType=None -p:DebugSymbols=false `
             -p:Version=${{ steps.version.outputs.value }} `
-            -o dist/windows
-      - name: Zip Windows package
+            -o dist/windows-self-contained
+          dotnet publish src/Lumen.Windows/Lumen.Windows.csproj `
+            -c Release -r win-x64 --self-contained false `
+            -p:PublishSingleFile=true `
+            -p:DebugType=None -p:DebugSymbols=false `
+            -p:Version=${{ steps.version.outputs.value }} `
+            -o dist/windows-framework-dependent
+      - name: Zip Windows packages
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
-          Compress-Archive -Path dist/windows/* `
-            -DestinationPath "dist/Lumen-Windows-x64-${{ steps.version.outputs.value }}.zip"
+          Compress-Archive -Path dist/windows-self-contained/* `
+            -DestinationPath "dist/Lumen-Windows-x64-self-contained-${{ steps.version.outputs.value }}.zip"
+          Compress-Archive -Path dist/windows-framework-dependent/* `
+            -DestinationPath "dist/Lumen-Windows-x64-framework-dependent-${{ steps.version.outputs.value }}.zip"
       - uses: actions/upload-artifact@v7
         with:
           name: windows-dist
-          path: dist/Lumen-Windows-x64-*.zip
+          path: |
+            dist/Lumen-Windows-x64-self-contained-*.zip
+            dist/Lumen-Windows-x64-framework-dependent-*.zip
           if-no-files-found: error
 
   android:
@@ -161,7 +172,8 @@ jobs:
           body: |
             ## 下载
 
-            - **Windows x64**：解压 `Lumen-Windows-x64-*.zip`，运行 `Lumen.Windows.exe`
+            - **Windows x64（自带运行时）**：解压 `Lumen-Windows-x64-self-contained-*.zip`，直接运行 `Lumen.Windows.exe`
+            - **Windows x64（需 .NET 8 桌面运行时）**：解压 `Lumen-Windows-x64-framework-dependent-*.zip`，安装 [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) 后运行
             - **Android**：`Lumen-Android-*.apk` 使用固定 Release 证书签名，后续版本可覆盖升级；签名信息见 `ANDROID-CERTIFICATE.txt`
 
             ## Docker

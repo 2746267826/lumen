@@ -51,6 +51,7 @@ Lumen 把「传个文件」这件事做得既快又清楚。同一个账户下�
 ### 原生客户端，而不是网页壳
 
 - Windows 使用 **WPF (.NET 8)**，Android 使用 **Kotlin + Jetpack Compose**，两端都是真正的原生界面。
+- 浅色与深色主题随时切换，也可跟随 Windows 系统主题；两套配色分别调整了文字对比度。
 - 深色玻璃质感、流畅动效与自适应布局，手机横竖屏和桌面窗口都顺手。
 - Windows 支持一键发送剪贴板内容；Android 可从相册、文件管理器或任意应用通过系统分享直接发给某台设备。
 - Android 前台服务保持后台在线与接收，切到后台不会立刻掉线。
@@ -69,7 +70,8 @@ Lumen 把「传个文件」这件事做得既快又清楚。同一个账户下�
 
 | 平台 | 安装包 | 说明 |
 | --- | --- | --- |
-| Windows 10/11 x64 | `Lumen-Windows-x64-<版本>.zip` | 自包含，解压后运行 `Lumen.Windows.exe` |
+| Windows 10/11 x64 | `Lumen-Windows-x64-self-contained-<版本>.zip` | 自带 .NET 运行时，解压后直接运行 |
+| Windows 10/11 x64 | `Lumen-Windows-x64-framework-dependent-<版本>.zip` | 体积小，需先安装 .NET 8 桌面运行时 |
 | Android 8.0+ | `Lumen-Android-<版本>.apk` | 固定证书签名，可直接覆盖升级 |
 | Linux 服务器 | `ghcr.io/2746267826/lumen:latest` | amd64 / arm64 多架构镜像 |
 
@@ -142,7 +144,7 @@ docker compose -f deploy/docker-compose.ghcr.yml up -d
 环境：.NET 8 SDK（Windows 客户端）、JDK 17 + Android SDK 35（Android 客户端）。
 
 ```bash
-# Windows：编译 / 自包含发布
+# Windows：编译 / 同时生成自带运行时与依赖运行时两种包
 dotnet build src/Lumen.Windows/Lumen.Windows.csproj -c Release
 ./scripts/publish-windows.sh
 

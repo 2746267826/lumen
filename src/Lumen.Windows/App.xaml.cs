@@ -15,6 +15,7 @@ public partial class App : Application
         DispatcherUnhandledException += OnDispatcherUnhandledException;
 
         Services = new AppServices();
+        ThemeManager.Apply(Services.Settings.ThemeMode);
         var window = new MainWindow
         {
             DataContext = Services.MainViewModel

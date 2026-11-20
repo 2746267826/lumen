@@ -64,6 +64,19 @@ jobs:
           dotnet-version: 8.0.x
       - name: Build
         run: dotnet build src/Lumen.Windows/Lumen.Windows.csproj -c Release
+      - name: Verify both publish modes
+        shell: pwsh
+        run: |
+          dotnet publish src/Lumen.Windows/Lumen.Windows.csproj -c Release -r win-x64 `
+            --self-contained true -p:PublishSingleFile=true `
+            -p:IncludeNativeLibrariesForSelfExtract=true `
+            -p:DebugType=None -p:DebugSymbols=false -o dist/self-contained
+          dotnet publish src/Lumen.Windows/Lumen.Windows.csproj -c Release -r win-x64 `
+            --self-contained false -p:PublishSingleFile=true `
+            -p:DebugType=None -p:DebugSymbols=false -o dist/framework-dependent
+          if (Get-ChildItem dist -Recurse -Filter *.pdb) { throw "PDB files must not be published" }
+          if (-not (Test-Path dist/self-contained/Lumen.Windows.exe)) { throw "Missing self-contained exe" }
+          if (-not (Test-Path dist/framework-dependent/Lumen.Windows.exe)) { throw "Missing framework-dependent exe" }
 
   android:
     name: Android debug build

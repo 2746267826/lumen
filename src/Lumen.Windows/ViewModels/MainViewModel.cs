@@ -16,6 +16,7 @@ using Microsoft.Win32;
 namespace Lumen.Windows.ViewModels;
 
 public sealed record ChunkSizeOption(int Bytes, string Label);
+public sealed record ThemeOption(string Key, string Label);
 
 public sealed class MainViewModel : ObservableObject, IDisposable
 {
@@ -74,6 +75,7 @@ public sealed class MainViewModel : ObservableObject, IDisposable
     private string _directStatus = "—";
     private string _discoveryStatus = "—";
     private ChunkSizeOption _selectedChunkSize;
+    private ThemeOption _selectedTheme;
 
     public MainViewModel(
         SettingsStore settingsStore,
@@ -109,6 +111,14 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         ];
         _selectedChunkSize = ChunkOptions.FirstOrDefault(x => x.Bytes == settings.ChunkSize)
                              ?? ChunkOptions[2];
+        ThemeOptions =
+        [
+            new(ThemeManager.SystemMode, "跟随系统"),
+            new(ThemeManager.LightMode, "浅色"),
+            new(ThemeManager.DarkMode, "深色")
+        ];
+        _selectedTheme = ThemeOptions.FirstOrDefault(x => x.Key == settings.ThemeMode)
+                         ?? ThemeOptions[0];
 
         Devices = new ObservableCollection<PeerDevice>();
         Shares = new ObservableCollection<ShareItem>();
@@ -287,6 +297,24 @@ public sealed class MainViewModel : ObservableObject, IDisposable
             {
                 OnPropertyChanged(nameof(ChunkDetailLabel));
             }
+        }
+    }
+
+    public IReadOnlyList<ThemeOption> ThemeOptions { get; }
+
+    public ThemeOption SelectedTheme
+    {
+        get => _selectedTheme;
+        set
+        {
+            if (value is null || !SetProperty(ref _selectedTheme, value))
+            {
+                return;
+            }
+
+            _settings.ThemeMode = value.Key;
+            ThemeManager.Apply(value.Key);
+            _ = PersistThemeAsync();
         }
     }
 
@@ -1444,6 +1472,18 @@ public sealed class MainViewModel : ObservableObject, IDisposable
         catch (Exception ex)
         {
             ShowToast("保存设置失败：" + ex.Message, true);
+        }
+    }
+
+    private async Task PersistThemeAsync()
+    {
+        try
+        {
+            await _settingsStore.SaveAsync();
+        }
+        catch
+        {
+            // Theme changes apply immediately; persistence can be retried on the next save.
         }
     }
 
