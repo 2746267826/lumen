@@ -78,7 +78,6 @@ public static class SharePageRenderer
                 <div class="file-head">
                   <div class="file-icon text">TXT</div>
                   <div>
-                    <h2>{WebUtility.HtmlEncode(share.Name)}</h2>
                     <p>{FormatBytes(share.Size)} · 文字分享</p>
                   </div>
                 </div>
@@ -99,7 +98,6 @@ public static class SharePageRenderer
             <div class="file-head">
               <div class="file-icon">{(share.Kind == TransferKinds.Image ? "IMG" : "FILE")}</div>
               <div>
-                <h2>{WebUtility.HtmlEncode(share.Name)}</h2>
                 <p>{FormatBytes(share.Size)} · {WebUtility.HtmlEncode(share.MimeType)}</p>
               </div>
             </div>
@@ -167,7 +165,7 @@ public static class SharePageRenderer
             .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; color: var(--muted); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
             .logo { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center;
               background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #0b0d14; font-weight: 800; letter-spacing: -.05em; }
-            h1 { margin: 0 0 10px; font-size: clamp(25px, 6vw, 36px); letter-spacing: -.035em; }
+            h1 { margin: 0 0 10px; font-size: clamp(25px, 6vw, 36px); letter-spacing: -.035em; overflow-wrap: anywhere; }
             h2 { margin: 0 0 6px; font-size: 19px; letter-spacing: -.02em; overflow-wrap: anywhere; }
             p { color: var(--muted); line-height: 1.7; }
             .file-head { display: flex; align-items: center; gap: 15px; margin: 8px 0 24px; }
