@@ -34,12 +34,12 @@ public sealed class LocalDiscovery : IDisposable
     public DateTimeOffset LastAnnouncement { get; private set; }
     public int SeenPeerCount => _seen.Count;
 
-    public async Task StartAsync(int directPort, CancellationToken ct = default)
+    public Task StartAsync(int directPort, CancellationToken ct = default)
     {
         _directPort = directPort;
         if (IsRunning)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
@@ -108,6 +108,8 @@ public sealed class LocalDiscovery : IDisposable
             IsRunning = false;
             StateChanged?.Invoke(this, EventArgs.Empty);
         }
+
+        return Task.CompletedTask;
     }
 
     public async Task StopAsync()

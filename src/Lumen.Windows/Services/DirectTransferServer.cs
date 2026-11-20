@@ -578,7 +578,7 @@ public sealed class DirectTransferServer : IAsyncDisposable
         }
     }
 
-    private async Task<IResult> CancelAsync(Guid transferId, HttpContext context)
+    private Task<IResult> CancelAsync(Guid transferId, HttpContext context)
     {
         if (!_states.TryGetValue(transferId, out var state))
         {
@@ -599,7 +599,7 @@ public sealed class DirectTransferServer : IAsyncDisposable
             _history.SaveSoon();
         }
 
-        return Results.Ok(state.Record.Snapshot());
+        return Task.FromResult(Results.Ok(state.Record.Snapshot()));
     }
 
     private async Task ExpirePendingOfferAsync(Guid transferId, IncomingState state)

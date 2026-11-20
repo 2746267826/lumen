@@ -939,11 +939,11 @@ public sealed class TransferCoordinator : IAsyncDisposable
         }
     }
 
-    private async Task HandleRelayCreatedAsync(JsonElement root)
+    private Task HandleRelayCreatedAsync(JsonElement root)
     {
         if (!root.TryGetProperty("transfer", out var transferElement))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         var dto = transferElement.Deserialize<TransferDto>(LumenJson.Options);
@@ -951,12 +951,12 @@ public sealed class TransferCoordinator : IAsyncDisposable
             dto.RecipientDeviceId != _settings.DeviceId ||
             dto.SenderDeviceId == _settings.DeviceId)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         if (_records.ContainsKey(dto.Id))
         {
-            return;
+            return Task.CompletedTask;
         }
 
         var record = new LocalTransferRecord
@@ -1002,6 +1002,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
         RegisterRecord(record);
         Notify($"收到来自 {record.PeerName} 的传输邀请。");
         IncomingInvite?.Invoke(this, record);
+        return Task.CompletedTask;
     }
 
     private Task HandleRelayDtoEventAsync(string? type, JsonElement root)
@@ -1173,7 +1174,7 @@ public sealed class TransferCoordinator : IAsyncDisposable
     private void AddLocalEvent(
         LocalTransferRecord record,
         string type,
-        string message,
+        string? message,
         long? bytes = null,
         double? speed = null,
         string? address = null,
