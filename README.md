@@ -82,6 +82,8 @@ Lumen 把「传个文件」这件事做得既快又清楚。同一个账户下�
 
 每个 Release 同时提供 `SHA256SUMS.txt` 与 `ANDROID-CERTIFICATE.txt`，可自行校验安装包。
 
+每个版本的改动都写在对应 Release 正文中（由仓库根目录的 `RELEASE_NOTES.md` 生成），升级前可以先看更新内容。Windows 压缩包内只有一个 `Lumen-<版本>.exe`，不含 `.pdb` 等调试文件。
+
 > 首次使用的 `v1.0.0` Android 包是 Debug 签名，无法升级到正式签名版本，需要卸载一次。**从 `v1.0.1` 起，后续版本均可直接覆盖安装升级。**
 
 ## 部署服务端
