@@ -30,3 +30,4 @@ Thumbs.db
 # Local publish output
 /publish/
 /artifacts/
+release-notes.md
